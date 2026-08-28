@@ -12,16 +12,13 @@
 <title>ملاحظاتي — بطاقات ثلاثية الأبعاد</title>
 <style>
 :root{
-  /* الألوان الجديدة: النمط الكبدي / العنابي الداكن */
-  --bg1: #25121b; /* كبدي داكن جداً */
-  --bg2: #381b28; /* كبدي أفتح قليلاً */
+  --bg1: #25121b;
+  --bg2: #381b28;
   --ink: #f4f2fb; 
-  --ink-dim: #cba8b9; /* رمادي مائل للوردي الفاتح */
-  --panel: #311824; /* لون مربعات الإحصائيات والأزرار */
+  --ink-dim: #cba8b9;
+  --panel: #311824;
   --panel-2: #3d1e2d;
   --line: #52273a;
-  
-  /* ألوان ظل البطاقات (تم الحفاظ عليها لتباين جميل مع الكبدي) */
   --accent-base: #ff477e;
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
@@ -36,7 +33,7 @@ body{
     linear-gradient(170deg, var(--bg1) 0%, var(--bg2) 100%);
   background-attachment:fixed;
 }
-button,input,textarea{font:inherit; color:inherit}
+button,input,textarea,select{font:inherit; color:inherit}
 .blob{position:fixed; border-radius:50%; filter:blur(60px); opacity:.3; z-index:0; pointer-events:none}
 .blob1{width:280px;height:280px;background:#ff477e;top:-80px;right:-60px;animation:float1 14s ease-in-out infinite}
 .blob2{width:220px;height:220px;background:#ffb703;bottom:10%;left:-70px;animation:float2 16s ease-in-out infinite}
@@ -50,7 +47,9 @@ button,input,textarea{font:inherit; color:inherit}
 .brand-emoji{font-size:26px}
 .brand b{font-size:20px;font-weight:900;display:block;letter-spacing:-.3px}
 .brand small{display:block;color:var(--ink-dim);font-size:11px;font-weight:700}
+.header-actions{display:flex;gap:8px}
 .icon-btn{width:46px;height:46px;border:0;border-radius:15px;background:linear-gradient(135deg,#ff477e,#9b5de5);color:#fff;font-size:20px;box-shadow:0 8px 18px rgba(255, 71, 126, 0.35);cursor:pointer}
+.icon-btn.ghost{background:linear-gradient(135deg,var(--panel-2),var(--panel));box-shadow:none;border:1px solid var(--line)}
 .icon-btn:active{transform:scale(0.94)}
 
 .hero{background:linear-gradient(135deg,#671b39,#a82b49);border-radius:26px;padding:24px;box-shadow:8px 8px 0 rgba(0,0,0,0.2), 0 20px 45px rgba(103, 27, 57, 0.4);margin-bottom:20px;position:relative;overflow:hidden}
@@ -78,16 +77,15 @@ button,input,textarea{font:inherit; color:inherit}
 .grid{display:grid;grid-template-columns:1fr;gap:26px}
 @media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
 
-/* --- تصميم البطاقة ثلاثية الأبعاد كما في الصورة --- */
 .note-wrap{position:relative; perspective:700px; touch-action:pan-y}
 .note-shadow{
   position:absolute; inset:0; background:var(--accent); 
   border-radius:22px; 
-  transform:translate(9px, 10px) rotate(var(--tilt,-1.2deg)); /* هذا هو الظل الملون */
+  transform:translate(9px, 10px) rotate(var(--tilt,-1.2deg));
   z-index:0;
 }
 .note-card{
-  position:relative; z-index:1; background:#1b0d14; /* لون غامق لسطح البطاقة */
+  position:relative; z-index:1; background:#1b0d14;
   border-radius:22px; padding:16px 16px 14px;
   border:1px solid rgba(255,255,255,0.08); transform:rotate(var(--tilt,-1.2deg));
   box-shadow:0 4px 0 rgba(0,0,0,0.25), 0 18px 30px -8px rgba(0,0,0,.55), 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
@@ -109,7 +107,7 @@ button,input,textarea{font:inherit; color:inherit}
 .note-actions button{border:0;background:rgba(255,255,255,0.08);color:var(--ink);width:36px;height:36px;border-radius:11px;font-size:15px;cursor:pointer}
 .note-actions button:active{transform:scale(.9)}
 .note-actions button.danger:active{background:#c92a2a}
-.color-row{display:flex;gap:7px;margin-top:10px;margin-bottom:10px}
+.color-row{display:flex;gap:7px;margin-top:10px;margin-bottom:10px;flex-wrap:wrap}
 .color-row span{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent}
 .color-row span.sel{border-color:#fff}
 
@@ -118,23 +116,27 @@ button,input,textarea{font:inherit; color:inherit}
 
 .modal{display:none;position:fixed;inset:0;background:rgba(20, 10, 15, 0.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:18px;z-index:20}
 .modal.show{display:flex}
-.box{background:var(--panel);border:1px solid var(--line);border-radius:26px;padding:22px;width:100%;max-width:460px;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:26px;padding:22px;width:100%;max-width:460px;max-height:88vh;overflow:auto;box-shadow:0 30px 60px rgba(0,0,0,.5)}
 .box h2{margin:0 0 16px;font-size:18px;font-weight:900}
 .box label{font-size:12px;color:var(--ink-dim);font-weight:800;display:block;margin:12px 0 6px}
-.box textarea,.box input{width:100%;padding:13px;border:2px solid var(--line);border-radius:14px;outline:0;background:#25121b;color:var(--ink);font-weight:600;resize:vertical}
-.box textarea:focus,.box input:focus{border-color:#ff477e}
+.box textarea,.box input,.box select{width:100%;padding:13px;border:2px solid var(--line);border-radius:14px;outline:0;background:#25121b;color:var(--ink);font-weight:600;resize:vertical}
+.box textarea:focus,.box input:focus,.box select:focus{border-color:#ff477e}
+.box .help{font-size:11px;color:var(--ink-dim);margin:8px 0 0;line-height:1.7}
+.tone-btn{flex:0 0 auto;padding:9px 14px;border-radius:12px;border:2px solid var(--line);background:var(--panel-2);color:var(--ink);font-weight:700;font-size:12.5px;cursor:pointer}
+.tone-btn.sel{border-color:#ff477e;background:color-mix(in srgb, #ff477e 20%, var(--panel-2))}
 .row{display:flex;gap:10px;margin-top:18px}
 .row button{flex:1;border:0;padding:13px;border-radius:14px;font-weight:800;cursor:pointer}
 .primary{background:linear-gradient(135deg,#ff477e,#9b5de5);color:#fff;box-shadow:0 8px 18px rgba(255, 71, 126, 0.3)}
 .secondary{background:#452232;color:var(--ink)}
 .danger-btn{background:linear-gradient(135deg,#ff6b6b,#c92a2a);color:#fff}
+.full-btn{width:100%;border:0;padding:13px;border-radius:14px;font-weight:800;cursor:pointer;margin-top:6px}
 
 .voice-box{text-align:center}
 #wave{width:100%;height:70px;border-radius:14px;background:#1a0d13;border:1px solid var(--line);margin-bottom:10px}
 .live-text{min-height:44px;font-weight:700;color:var(--ink-dim);font-size:13.5px}
 .rec-timer{font-size:22px;font-weight:900;font-variant-numeric:tabular-nums;margin:6px 0;color:#ff477e}
 
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#452232;border:1px solid var(--line);color:#fff;padding:13px 20px;border-radius:16px;display:none;z-index:40;font-size:13px;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,.4)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#452232;border:1px solid var(--line);color:#fff;padding:13px 20px;border-radius:16px;display:none;z-index:40;font-size:13px;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,.4);max-width:88vw;text-align:center}
 .offline-note{text-align:center;font-size:11px;color:var(--ink-dim);margin-top:14px;font-weight:700}
 .particle{position:fixed;pointer-events:none;font-size:18px;z-index:50;animation:rise 900ms ease-out forwards}
 @keyframes rise{to{transform:translateY(-90px) rotate(30deg);opacity:0}}
@@ -145,7 +147,10 @@ button,input,textarea{font:inherit; color:inherit}
 <div class="app">
   <header class="header">
     <div class="brand"><span class="brand-emoji">🗒️</span><div><b>ملاحظاتي</b><small>بطاقات ثلاثية الأبعاد • تعمل بدون إنترنت</small></div></div>
-    <button class="icon-btn" onclick="openComposer()" aria-label="ملاحظة جديدة">＋</button>
+    <div class="header-actions">
+      <button class="icon-btn ghost" onclick="openSettings()" aria-label="الإعدادات">⚙️</button>
+      <button class="icon-btn" onclick="openComposer()" aria-label="ملاحظة جديدة">＋</button>
+    </div>
   </header>
 
   <section class="hero">
@@ -238,6 +243,38 @@ button,input,textarea{font:inherit; color:inherit}
   </div>
 </div>
 
+<!-- الإعدادات -->
+<div class="modal" id="settingsModal">
+  <div class="box">
+    <h2>⚙️ الإعدادات</h2>
+
+    <label>لهجة التعرف على الصوت</label>
+    <select id="setLang" onchange="settings.sttLang=this.value; saveSettings();">
+      <option value="ar-SA">العربية الفصحى (السعودية) — الأدق عادة</option>
+      <option value="ar-EG">العربية (مصر)</option>
+      <option value="ar-AE">العربية (الإمارات)</option>
+      <option value="ar-KW">العربية (الكويت)</option>
+      <option value="ar-JO">العربية (الأردن)</option>
+      <option value="ar-MA">العربية (المغرب)</option>
+    </select>
+    <p class="help">لا توجد لهجة يمنية ضمن خيارات جوجل للتعرف الصوتي، لذلك اخترنا السعودية كأقرب خيار للفصحى. جرّب لهجة أخرى إن لم تُعطِك دقة جيدة. تحويل الصوت لنص يحتاج اتصالاً بالإنترنت دائماً — هذه خدمة جوجل السحابية ولا بديل محلي مجاني لها داخل المتصفح.</p>
+
+    <label>نغمة التذكير</label>
+    <div class="color-row" id="toneRow"></div>
+    <p class="help">هذه النغمة تُسمع عندما يكون التطبيق مفتوحاً أمامك. عند إغلاق التطبيق، يستخدم النظام نغمة الإشعارات الافتراضية لجهازك — لا يسمح أي متصفح لأي تطبيق ويب باختيار نغمة مخصّصة لإشعارات الخلفية.</p>
+
+    <label>الإشعارات في الخلفية</label>
+    <button class="secondary full-btn" onclick="enableBackgroundReminders()">🔔 تفعيل الإشعارات والتحقق الدوري</button>
+    <p class="help">لا يمكن لأي تطبيق PWA ضمان ظهور التذكير في وقته تماماً عند إغلاق التطبيق كليّاً — هذا قيد من المتصفح نفسه وليس خطأ بالتطبيق. بعد الضغط هنا، سيحاول التطبيق التحقق من التذكيرات في الخلفية كلما سمح النظام بذلك (على أندرويد فقط، وبفواصل يحددها المتصفح، غالباً ليست دقيقة للثانية). لأفضل نتيجة: أبقِ التطبيق مفتوحاً في الخلفية ولا تُغلقه بالسحب الكامل.</p>
+
+    <button class="secondary full-btn" onclick="forceUpdateApp()">🔄 تحديث التطبيق وتفريغ الكاش</button>
+
+    <div class="row">
+      <button class="primary" onclick="closeSettings()">تم</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -245,8 +282,8 @@ const KEY='brilliantNotesV4';
 const ACCENTS=['#ff477e','#ffb703','#06d6a0','#9b5de5','#00b4d8','#f15bb5']; 
 let notes=JSON.parse(localStorage.getItem(KEY)||'[]');
 const $=id=>document.getElementById(id);
-const toast=t=>{$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2200)};
-const save=()=>{localStorage.setItem(KEY,JSON.stringify(notes));render()};
+const toast=t=>{$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2600)};
+const save=()=>{localStorage.setItem(KEY,JSON.stringify(notes));render();mirrorReminders();};
 const uid=()=>Date.now().toString()+Math.random().toString(36).slice(2,6);
 const pad=n=>String(n).padStart(2,'0');
 function fmtTime(iso){const d=new Date(iso);return pad(d.getDate())+'/'+pad(d.getMonth()+1)+' • '+pad(d.getHours())+':'+pad(d.getMinutes())}
@@ -261,6 +298,64 @@ function buildColorRow(container,selected,onPick){
     s.onclick=()=>{[...container.children].forEach(x=>x.classList.remove('sel'));s.classList.add('sel');onPick(c)};
     container.appendChild(s);
   });
+}
+
+/* ---------- الإعدادات (لهجة الصوت + نغمة التذكير) ---------- */
+const SETTINGS_KEY='notesSettingsV1';
+let settings=Object.assign({sttLang:'ar-SA',tone:'chime'}, JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}'));
+function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+
+const TONES=[
+  {id:'chime', name:'جرس',      freq:880,  dur:0.30, type:'sine'},
+  {id:'bell',  name:'ناقوس',    freq:660,  dur:0.22, type:'triangle', second:990},
+  {id:'soft',  name:'ناعمة',    freq:440,  dur:0.55, type:'sine'},
+  {id:'alert', name:'تنبيه',    freq:1000, dur:0.10, type:'square', repeat:3},
+  {id:'classic', name:'كلاسيكية', freq:660, dur:0.35, type:'square'}
+];
+function playTone(id){
+  const t=TONES.find(x=>x.id===id)||TONES[0];
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const fire=(freq,start,dur,type)=>{
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.type=type||'sine'; o.frequency.value=freq;
+      o.connect(g); g.connect(ctx.destination);
+      g.gain.setValueAtTime(0.0001, ctx.currentTime+start);
+      g.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime+start+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+start+dur);
+      o.start(ctx.currentTime+start); o.stop(ctx.currentTime+start+dur+0.03);
+    };
+    if(t.repeat){ for(let i=0;i<t.repeat;i++) fire(t.freq, i*(t.dur+0.09), t.dur, t.type); }
+    else if(t.second){ fire(t.freq,0,t.dur,t.type); fire(t.second,t.dur*0.8,t.dur,t.type); }
+    else{ fire(t.freq,0,t.dur,t.type); }
+    setTimeout(()=>ctx.close().catch(()=>{}), (t.dur*(t.repeat||1)+0.6)*1000);
+  }catch(e){}
+}
+function buildToneRow(){
+  const c=$('toneRow'); c.innerHTML='';
+  TONES.forEach(t=>{
+    const b=document.createElement('button'); b.type='button'; b.textContent=t.name;
+    b.className='tone-btn'+(t.id===settings.tone?' sel':'');
+    b.onclick=()=>{ settings.tone=t.id; saveSettings(); playTone(t.id); buildToneRow(); };
+    c.appendChild(b);
+  });
+}
+function openSettings(){
+  $('setLang').value=settings.sttLang;
+  buildToneRow();
+  $('settingsModal').classList.add('show');
+}
+function closeSettings(){ $('settingsModal').classList.remove('show'); }
+async function forceUpdateApp(){
+  try{
+    if('caches' in window){ const keys=await caches.keys(); await Promise.all(keys.map(k=>caches.delete(k))); }
+    if('serviceWorker' in navigator){
+      const regs=await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r=>r.unregister()));
+    }
+    toast('✅ تم تفريغ الكاش، سيُعاد تحميل التطبيق');
+    setTimeout(()=>location.reload(),900);
+  }catch(e){ toast('تعذّر تفريغ الكاش'); }
 }
 
 /* ---------- عرض البطاقات ---------- */
@@ -321,20 +416,23 @@ function saveComposer(){
   if(!text)return toast('اكتب نص الملاحظة أولاً');
   const remVal=$('composerReminder').value;
   const reminderAt=remVal?new Date(remVal).toISOString():null;
+  let n;
   if(editingId){
-    const n=notes.find(x=>x.id===editingId);
+    n=notes.find(x=>x.id===editingId);
     n.text=text; n.color=composerColor;
     if(reminderAt!==n.reminderAt){n.reminderAt=reminderAt; n.reminded=false;}
   }else{
-    notes.unshift({id:uid(),text,color:composerColor,createdAt:new Date().toISOString(),pinned:false,reminderAt,reminded:false,audio:null,audioDuration:null,fromVoice:false});
+    n={id:uid(),text,color:composerColor,createdAt:new Date().toISOString(),pinned:false,reminderAt,reminded:false,audio:null,audioDuration:null,fromVoice:false};
+    notes.unshift(n);
     burstConfetti();
   }
-  save(); closeComposer(); toast('✅ تم الحفظ');
+  save(); resyncNoteTrigger(n); closeComposer(); toast('✅ تم الحفظ');
 }
 function togglePin(id){const n=notes.find(x=>x.id===id); n.pinned=!n.pinned; save();}
 function deleteNote(id){
   const n=notes.find(x=>x.id===id); if(!n)return;
   if(!confirm('حذف هذه الملاحظة نهائياً؟'))return;
+  cancelTriggerNotification(id);
   notes=notes.filter(x=>x.id!==id); save(); toast('🗑️ تم الحذف');
 }
 
@@ -349,11 +447,12 @@ function saveReminder(){
   const n=notes.find(x=>x.id===reminderTargetId); if(!n)return;
   const v=$('reminderInput').value; if(!v)return toast('اختر تاريخاً ووقتاً');
   n.reminderAt=new Date(v).toISOString(); n.reminded=false;
-  save(); $('reminderModal').classList.remove('show');
+  save(); resyncNoteTrigger(n); $('reminderModal').classList.remove('show');
   requestNotifPerm(true); toast('⏰ تم ضبط التذكير');
 }
 function clearReminder(){
-  const n=notes.find(x=>x.id===reminderTargetId); if(n){n.reminderAt=null;n.reminded=false;}
+  const n=notes.find(x=>x.id===reminderTargetId);
+  if(n){ cancelTriggerNotification(n.id); n.reminderAt=null;n.reminded=false; }
   save(); $('reminderModal').classList.remove('show'); toast('تم إلغاء التذكير');
 }
 function requestNotifPerm(silent){
@@ -361,22 +460,13 @@ function requestNotifPerm(silent){
   if(Notification.permission==='default')Notification.requestPermission();
   else if(!silent) toast(Notification.permission==='granted'?'✅ الإشعارات مفعّلة':'الإشعارات غير مفعّلة من إعدادات المتصفح');
 }
-function beep(){
-  try{
-    const ctx=new (window.AudioContext||window.webkitAudioContext)();
-    const o=ctx.createOscillator(), g=ctx.createGain();
-    o.type='sine'; o.frequency.value=880; o.connect(g); g.connect(ctx.destination);
-    g.gain.setValueAtTime(0.15,ctx.currentTime);
-    o.start(); o.stop(ctx.currentTime+0.35);
-  }catch(e){}
-}
 function checkReminders(){
   const now=new Date();
   let changed=false;
   notes.forEach(n=>{
     if(n.reminderAt && !n.reminded && new Date(n.reminderAt)<=now){
       n.reminded=true; changed=true;
-      beep();
+      playTone(settings.tone);
       try{ if('speechSynthesis' in window){
         const u=new SpeechSynthesisUtterance('تذكير: '+n.text);
         u.lang='ar-SA'; speechSynthesis.speak(u);
@@ -390,6 +480,101 @@ function checkReminders(){
   if(changed) save();
 }
 setInterval(checkReminders,15000);
+
+/* ---------- التخزين المشترك مع Service Worker عبر IndexedDB ----------
+   localStorage غير متاح داخل الـ Service Worker، لذلك نُخزّن نسخة خفيفة من
+   بيانات التذكيرات فقط (id/نص/موعد/تم) في IndexedDB، ليتمكن العامل من
+   التحقق منها وإطلاق إشعار حتى لو كان التطبيق مغلقاً. كل بياناتك تبقى
+   محلية بالكامل على جهازك، لا شيء يُرسل لأي خادم. */
+const RDB_NAME='notesRemindersDB', RDB_STORE='reminders';
+function openRDB(){
+  return new Promise((resolve,reject)=>{
+    if(!('indexedDB' in window)) return reject('no-idb');
+    const req=indexedDB.open(RDB_NAME,1);
+    req.onupgradeneeded=()=>{ const db=req.result; if(!db.objectStoreNames.contains(RDB_STORE)) db.createObjectStore(RDB_STORE,{keyPath:'id'}); };
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error);
+  });
+}
+async function mirrorReminders(){
+  try{
+    const db=await openRDB();
+    const tx=db.transaction(RDB_STORE,'readwrite');
+    const store=tx.objectStore(RDB_STORE);
+    await new Promise((res)=>{ const c=store.clear(); c.onsuccess=res; c.onerror=res; });
+    notes.filter(n=>n.reminderAt).forEach(n=>{
+      store.put({id:n.id, text:n.text, reminderAt:n.reminderAt, reminded:!!n.reminded});
+    });
+  }catch(e){}
+}
+async function syncRemindedFromIDB(){
+  try{
+    const db=await openRDB();
+    const tx=db.transaction(RDB_STORE,'readonly');
+    const all=await new Promise((res,rej)=>{ const r=tx.objectStore(RDB_STORE).getAll(); r.onsuccess=()=>res(r.result||[]); r.onerror=()=>rej(r.error); });
+    let changed=false;
+    all.forEach(item=>{
+      const n=notes.find(x=>x.id===item.id);
+      if(n && item.reminded && !n.reminded){ n.reminded=true; changed=true; }
+    });
+    if(changed) save();
+  }catch(e){}
+}
+
+/* ---------- جدولة إشعار دقيقة عبر TimestampTrigger (مدعومة جزئياً وتجريبياً في كروم أندرويد فقط) ---------- */
+async function scheduleTriggerNotification(note){
+  if(!('serviceWorker' in navigator) || typeof TimestampTrigger==='undefined') return false;
+  if(!note.reminderAt || Notification.permission!=='granted') return false;
+  const ts=new Date(note.reminderAt).getTime();
+  if(ts<=Date.now()) return false;
+  try{
+    const reg=await navigator.serviceWorker.ready;
+    await reg.showNotification('⏰ تذكير من ملاحظاتي',{
+      tag:'note-'+note.id, body:(note.text||'').slice(0,150),
+      showTrigger:new TimestampTrigger(ts),
+      icon:'./icon.svg', badge:'./icon.svg', dir:'rtl', lang:'ar'
+    });
+    return true;
+  }catch(e){ return false; }
+}
+async function cancelTriggerNotification(noteId){
+  if(!('serviceWorker' in navigator)) return;
+  try{
+    const reg=await navigator.serviceWorker.ready;
+    const notifs=await reg.getNotifications({tag:'note-'+noteId, includeTriggered:true});
+    notifs.forEach(n=>n.close());
+  }catch(e){}
+}
+async function resyncNoteTrigger(note){
+  if(!note) return;
+  await cancelTriggerNotification(note.id);
+  if(note.reminderAt) await scheduleTriggerNotification(note);
+}
+
+async function enableBackgroundReminders(){
+  if(!('Notification' in window)) return toast('المتصفح لا يدعم الإشعارات');
+  const perm=await Notification.requestPermission();
+  if(perm!=='granted'){ toast('لم يتم منح إذن الإشعارات'); return; }
+  await mirrorReminders();
+  if('serviceWorker' in navigator){
+    try{
+      const reg=await navigator.serviceWorker.ready;
+      if('periodicSync' in reg){
+        try{
+          const status=await navigator.permissions.query({name:'periodic-background-sync'});
+          if(status.state==='granted'){
+            await reg.periodicSync.register('check-reminders',{minInterval:15*60*1000});
+            toast('✅ تم تفعيل التحقق الدوري في الخلفية');
+          }else{
+            toast('⚠️ إذن المزامنة الدورية غير مُتاح، سيُعتمد على فتح التطبيق فقط');
+          }
+        }catch(e){ toast('⚠️ المزامنة الدورية غير مدعومة في هذا المتصفح'); }
+      }else{
+        toast('⚠️ متاحة فقط في أندرويد كروم بعد تثبيت التطبيق كـ PWA');
+      }
+    }catch(e){}
+  }
+}
 
 /* ---------- القراءة الصوتية لأي ملاحظة ---------- */
 function speakNote(id){
@@ -432,22 +617,27 @@ function attachCardEffects(){
   });
 }
 
-/* ---------- الملاحظة الصوتية: تسجيل + تفريغ نصي ---------- */
-let mediaRecorder=null, mediaChunks=[], mediaStream=null, recognition=null;
+/* ---------- الملاحظة الصوتية: تسجيل + تفريغ نصي ----------
+   ملاحظة تقنية مهمة: كنّا سابقاً نفتح ميكروفوناً عبر MediaRecorder بالتوازي
+   مع ميكروفون آخر داخلي يفتحه SpeechRecognition — على كثير من هواتف
+   أندرويد لا يُسمح بفتح مصدرين للميكروفون في نفس اللحظة، فيفشل التعرف
+   الصوتي بصمت. بما أن الصوت الفعلي لم يكن يُحفظ أصلاً، تم الاستغناء عن
+   MediaRecorder والاكتفاء بمصدر واحد للـ getUserMedia (للموجة المرئية فقط)
+   وترك SpeechRecognition يدير ميكروفونه الخاص بحرية. */
+let mediaStream=null, recognition=null, recognitionShouldRun=false;
 let recStartTime=0, recTimerHandle=null, liveTranscript='';
 let audioCtx=null, analyser=null, waveHandle=null;
 
 async function toggleVoiceNote(){
-  if(mediaRecorder && mediaRecorder.state==='recording'){ stopVoiceNote(); return; }
+  if(recognitionShouldRun){ stopVoiceNote(); return; }
   await startVoiceNote();
 }
 async function startVoiceNote(){
   try{
     mediaStream=await navigator.mediaDevices.getUserMedia({audio:true});
   }catch(e){ toast('يلزم إذن الميكروفون للتسجيل. تأكد من فتح التطبيق عبر رابط آمن HTTPS.'); return; }
-  mediaChunks=[]; liveTranscript='';
-  mediaRecorder=new MediaRecorder(mediaStream);
-  mediaRecorder.start();
+  liveTranscript='';
+  recognitionShouldRun=true;
   recStartTime=Date.now();
   $('micBtn').classList.add('rec'); $('micBtn').innerHTML='⏹️ إيقاف التسجيل<small>اضغط للإنهاء وتحويل الصوت لنص</small>';
   $('voiceModal').classList.add('show'); $('liveText').textContent='تحدث بوضوح...'; $('recTimer').textContent='00:00';
@@ -458,7 +648,9 @@ async function startVoiceNote(){
   setupWaveform(mediaStream);
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(SR){
-    recognition=new SR(); recognition.lang='ar-YE'; recognition.continuous=true; recognition.interimResults=true;
+    recognition=new SR();
+    recognition.lang=settings.sttLang||'ar-SA';
+    recognition.continuous=true; recognition.interimResults=true;
     recognition.onresult=e=>{
       let interim='';
       for(let i=e.resultIndex;i<e.results.length;i++){
@@ -467,7 +659,21 @@ async function startVoiceNote(){
       }
       $('liveText').textContent=(liveTranscript+interim)||'...';
     };
-    recognition.onerror=()=>{ $('liveText').textContent='(تعذّر التفريغ النصي — يمكنك كتابة النص يدوياً لاحقاً. يحتاج إنترنت)'; };
+    recognition.onerror=e=>{
+      const msgs={
+        'not-allowed':'تم رفض إذن الميكروفون. فعّله من إعدادات المتصفح.',
+        'service-not-allowed':'تم رفض إذن الميكروفون. فعّله من إعدادات المتصفح.',
+        'no-speech':'لم يتم رصد صوت، حاول التحدث بوضوح أكثر.',
+        'audio-capture':'تعذّر الوصول للميكروفون — تأكد أنه غير مستخدم من تطبيق آخر.',
+        'network':'تحويل الصوت لنص يحتاج اتصالاً فعلياً بالإنترنت (خدمة جوجل الصوتية).',
+        'language-not-supported':'اللهجة المختارة غير مدعومة، جرّب لهجة أخرى من ⚙️ الإعدادات.'
+      };
+      const m=msgs[e.error];
+      if(m) $('liveText').textContent=m;
+    };
+    recognition.onend=()=>{
+      if(recognitionShouldRun){ try{ recognition.start(); }catch(e){} }
+    };
     try{ recognition.start(); }catch(e){}
   }else{
     $('liveText').textContent='ميزة تحويل الصوت لنص غير مدعومة في متصفحك الحالي.';
@@ -497,30 +703,25 @@ function teardownWaveform(){
   if(waveHandle) cancelAnimationFrame(waveHandle);
   if(audioCtx){ audioCtx.close().catch(()=>{}); audioCtx=null; }
 }
-function stopVoiceNote(){
-  if(!mediaRecorder) return;
-  clearInterval(recTimerHandle);
-  
-  mediaRecorder.stop();
-  mediaStream.getTracks().forEach(t=>t.stop());
+function stopMic(){
+  if(mediaStream){ mediaStream.getTracks().forEach(t=>t.stop()); mediaStream=null; }
   if(recognition){ try{recognition.stop();}catch(e){} }
   teardownWaveform();
+}
+function stopVoiceNote(){
+  recognitionShouldRun=false;
+  clearInterval(recTimerHandle);
+  stopMic();
   $('voiceModal').classList.remove('show');
   $('micBtn').classList.remove('rec'); $('micBtn').innerHTML='🎙️ ملاحظة صوتية جديدة<small>اضغط للبدء، واضغط مجدداً للإيقاف</small>';
-  mediaRecorder=null;
-  
   openReview();
 }
 function cancelVoiceNote(){
-  if(mediaRecorder && mediaRecorder.state==='recording'){
-    mediaRecorder.stop();
-    mediaStream.getTracks().forEach(t=>t.stop());
-  }
-  if(recognition){ try{recognition.stop();}catch(e){} }
-  clearInterval(recTimerHandle); teardownWaveform();
+  recognitionShouldRun=false;
+  clearInterval(recTimerHandle);
+  stopMic();
   $('voiceModal').classList.remove('show');
   $('micBtn').classList.remove('rec'); $('micBtn').innerHTML='🎙️ ملاحظة صوتية جديدة<small>اضغط للبدء، واضغط مجدداً للإيقاف</small>';
-  mediaRecorder=null;
 }
 let reviewColor=null;
 function openReview(){
@@ -537,12 +738,13 @@ function saveReview(){
     return;
   }
   const remVal=$('reviewReminder').value;
-  notes.unshift({
+  const n={
     id:uid(), text:text, color:reviewColor, createdAt:new Date().toISOString(),
     pinned:false, reminderAt:remVal?new Date(remVal).toISOString():null, reminded:false,
     audio:null, audioDuration:null, fromVoice:true
-  });
-  save(); $('reviewModal').classList.remove('show'); burstConfetti(); toast('✅ تم حفظ الملاحظة الكتابية');
+  };
+  notes.unshift(n);
+  save(); resyncNoteTrigger(n); $('reviewModal').classList.remove('show'); burstConfetti(); toast('✅ تم حفظ الملاحظة الكتابية');
 }
 function discardReview(){
   $('reviewModal').classList.remove('show'); toast('تم إلغاء الملاحظة');
@@ -585,14 +787,22 @@ function burstConfetti(){
 function updateOnlineStatus(){
   $('offlineNote').textContent = navigator.onLine
     ? 'التطبيق يعمل من جهازك — ميزة تحويل الصوت لنص متصلة'
-    : '📴 وضع عدم الاتصال — ميزة تحويل الصوت لنص تحتاج إنترنت';
+    : '📴 وضع عدم الاتصال — التطبيق يعمل بكامل ميزاته محلياً، فقط تحويل الصوت لنص يحتاج إنترنت';
 }
 window.addEventListener('online',updateOnlineStatus);
 window.addEventListener('offline',updateOnlineStatus);
 updateOnlineStatus();
 
+/* ---------- تسجيل الـ Service Worker + محاولة تفعيل المزامنة الدورية تلقائياً ---------- */
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(()=>{}));
+  window.addEventListener('load', async ()=>{
+    try{
+      const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
+      if('Notification' in window && Notification.permission==='granted' && 'periodicSync' in reg){
+        try{ await reg.periodicSync.register('check-reminders',{minInterval:15*60*1000}); }catch(e){}
+      }
+    }catch(e){}
+  });
 }
 let deferredInstallPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{
@@ -606,6 +816,8 @@ async function installApp(){
 window.addEventListener('appinstalled',()=>{ $('installBtn').style.display='none'; toast('✅ تم تثبيت التطبيق'); });
 
 render();
+mirrorReminders();
+syncRemindedFromIDB();
 </script>
 </body>
 </html>
