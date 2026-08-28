@@ -2,505 +2,3711 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover">
+
 <meta name="theme-color" content="#25121b">
-<meta name="description" content="ملاحظات ذكية ثلاثية الأبعاد بتذكير وتسجيل صوتي">
+
+<meta name="description"
+      content="ملاحظاتي - ملاحظات محلية مع تذكيرات ونغمات">
+
 <meta name="application-name" content="ملاحظاتي">
+
 <link rel="manifest" href="manifest.json">
-<title>ملاحظاتي الاحترافية</title>
+
+<title>ملاحظاتي</title>
+
 <style>
+
 :root{
-  --bg-main: #f4f2fb;
-  --panel: #311824;
-  --line: #52273a;
-  --accent: #ff477e;
+  --bg1:#180b11;
+  --bg2:#321622;
+  --panel:#29121c;
+  --panel2:#3b1b29;
+  --line:#5b2940;
+  --text:#fff;
+  --dim:#cba8b9;
+  --accent:#ff477e;
 }
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent; font-family:system-ui,sans-serif;}
-html,body{height:100%; margin:0; background:#25121b; color:#fff; overflow-x:hidden;}
-button,input,textarea,select{font:inherit; color:inherit;}
 
-/* Header & UI */
-.app{max-width:760px; margin:auto; padding:20px 15px 80px; position:relative;}
-.header{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;}
-.brand{background:var(--panel); padding:10px 20px; border-radius:20px; border:1px solid var(--line); font-weight:bold; font-size:18px;}
-.mic-btn{width:100%; padding:20px; border-radius:20px; border:none; background:linear-gradient(135deg,#ff477e,#9b5de5); color:#fff; font-size:18px; font-weight:bold; cursor:pointer; box-shadow:0 10px 20px rgba(255,71,126,0.3); transition:0.3s;}
-.mic-btn.rec{background:linear-gradient(135deg,#ff6b6b,#c92a2a); animation:pulse 1s infinite;}
-@keyframes pulse{50%{transform:scale(0.97);}}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
-/* Controls */
-.controls{display:flex; gap:10px; margin:20px 0;}
-.controls button{flex:1; padding:12px; border-radius:15px; border:1px solid var(--line); background:var(--panel); font-weight:bold; cursor:pointer;}
-.searchbar{width:100%; padding:15px; border-radius:15px; border:1px solid var(--line); background:var(--panel); margin-bottom:20px; outline:none;}
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;
+  color:var(--text);
+}
 
-/* Grid & Note Cards */
-.grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:15px;}
+body{
+  min-height:100vh;
+
+  background:
+    radial-gradient(
+      70% 50% at 15% 0%,
+      rgba(255,71,126,.15),
+      transparent 60%
+    ),
+    radial-gradient(
+      60% 45% at 100% 15%,
+      rgba(255,183,3,.10),
+      transparent 55%
+    ),
+    linear-gradient(
+      170deg,
+      var(--bg1),
+      var(--bg2)
+    );
+
+  background-attachment:fixed;
+  overflow-x:hidden;
+}
+
+button,
+input,
+textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.app{
+  max-width:850px;
+  margin:auto;
+  padding:15px 14px 70px;
+}
+
+/* HEADER */
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  padding:12px 17px;
+
+  border-radius:20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--panel),
+      var(--panel2)
+    );
+
+  border:1px solid var(--line);
+
+  box-shadow:
+    6px 6px 0 rgba(0,0,0,.18);
+}
+
+.brand-icon{
+  font-size:25px;
+}
+
+.brand b{
+  display:block;
+  font-size:20px;
+  font-weight:900;
+}
+
+.brand small{
+  color:var(--dim);
+  font-size:10px;
+}
+
+.header-actions{
+  display:flex;
+  gap:7px;
+}
+
+.icon-btn{
+  width:45px;
+  height:45px;
+
+  border:0;
+  border-radius:15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff477e,
+      #9b5de5
+    );
+
+  color:white;
+  font-size:21px;
+
+  box-shadow:
+    0 8px 20px rgba(255,71,126,.3);
+}
+
+.icon-btn:active{
+  transform:scale(.93);
+}
+
+/* HERO */
+
+.hero{
+  border-radius:25px;
+  padding:22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #651b38,
+      #a82b49
+    );
+
+  box-shadow:
+    8px 8px 0 rgba(0,0,0,.2);
+
+  margin-bottom:15px;
+}
+
+.hero h1{
+  margin:0 0 5px;
+  font-size:23px;
+}
+
+.hero p{
+  margin:0;
+  font-size:12px;
+  opacity:.9;
+}
+
+.mic-btn{
+  width:100%;
+
+  border:0;
+
+  margin-top:17px;
+
+  padding:19px 12px;
+
+  border-radius:20px;
+
+  background:white;
+
+  color:#681b3a;
+
+  font-weight:900;
+  font-size:17px;
+
+  box-shadow:
+    0 12px 25px rgba(0,0,0,.25);
+}
+
+.mic-btn.rec{
+  background:
+    linear-gradient(
+      135deg,
+      #ff5555,
+      #b50000
+    );
+
+  color:white;
+
+  animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+  50%{
+    transform:scale(.98);
+  }
+}
+
+/* STATS */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:14px;
+}
+
+.stat{
+  text-align:center;
+  padding:12px 5px;
+
+  border-radius:15px;
+
+  background:var(--panel);
+
+  border:1px solid var(--line);
+}
+
+.stat span{
+  display:block;
+  color:var(--dim);
+  font-size:10px;
+}
+
+.stat b{
+  display:block;
+  font-size:18px;
+  margin-top:3px;
+}
+
+/* SEARCH */
+
+.searchbar{
+  width:100%;
+
+  border:1px solid var(--line);
+
+  background:var(--panel);
+
+  color:white;
+
+  border-radius:16px;
+
+  padding:14px;
+
+  outline:none;
+
+  margin-bottom:15px;
+}
+
+.searchbar:focus{
+  border-color:#ff477e;
+}
+
+/* GRID */
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:22px;
+}
+
+@media(min-width:600px){
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+/* NOTE */
+
+.note-wrap{
+  position:relative;
+}
+
+.note-shadow{
+  position:absolute;
+
+  inset:0;
+
+  border-radius:22px;
+
+  transform:
+    translate(8px,9px);
+}
+
 .note-card{
-  border-radius:20px; padding:20px; position:relative;
-  box-shadow:0 8px 16px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1);
-  display:flex; flex-direction:column; gap:12px; transition:0.2s;
+  position:relative;
+
+  border-radius:22px;
+
+  padding:16px;
+
+  background:
+    var(--card-bg,#1b0d14);
+
+  color:
+    var(--card-text,#fff);
+
+  border:
+    1px solid rgba(255,255,255,.1);
+
+  box-shadow:
+    0 5px 0 rgba(0,0,0,.3),
+    0 18px 30px rgba(0,0,0,.4);
+
+  transition:
+    transform .15s ease;
 }
-.note-card.pinned{border:2px solid #ffb703;}
-.note-header{display:flex; justify-content:space-between; font-size:12px; opacity:0.8;}
-.note-text{font-size:16px; line-height:1.6; white-space:pre-wrap; flex-grow:1;}
-.reminder-badge{background:rgba(0,0,0,0.3); padding:5px 10px; border-radius:10px; font-size:12px; display:inline-block; border:1px dashed currentcolor;}
-.actions{display:flex; gap:8px; justify-content:flex-end; border-top:1px solid rgba(0,0,0,0.1); padding-top:10px;}
-.actions button{background:rgba(0,0,0,0.2); border:none; width:35px; height:35px; border-radius:10px; cursor:pointer; display:flex; align-items:center; justify-content:center;}
 
-/* Modals */
-.modal{display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(5px); z-index:100; align-items:center; justify-content:center; padding:15px;}
-.modal.show{display:flex;}
-.box{background:var(--panel); width:100%; max-width:400px; padding:25px; border-radius:25px; border:1px solid var(--line); max-height:90vh; overflow-y:auto;}
-.box h3{margin-top:0;}
-.box label{display:block; margin:15px 0 5px; font-size:13px; color:#cba8b9;}
-.box input[type="text"], .box input[type="datetime-local"], .box textarea{width:100%; padding:12px; border-radius:10px; border:1px solid var(--line); background:#1a0d13; outline:none;}
-.colors{display:flex; gap:10px; margin-bottom:15px;}
-.colors input[type="color"]{width:40px; height:40px; border:none; border-radius:10px; cursor:pointer; background:none;}
-.btn-row{display:flex; gap:10px; margin-top:20px;}
-.btn-row button{flex:1; padding:12px; border-radius:12px; border:none; font-weight:bold; cursor:pointer;}
-.btn-primary{background:var(--accent); color:#fff;}
-.btn-secondary{background:#452232;}
+.note-card:active{
+  transform:scale(.99);
+}
 
-/* Voice Wave */
-.waves{display:flex; justify-content:center; gap:5px; height:50px; align-items:center;}
-.waves span{width:6px; background:var(--accent); border-radius:3px; animation:wave 1s infinite ease-in-out;}
-.waves span:nth-child(2){animation-delay:0.1s; background:#ffb703;}
-.waves span:nth-child(3){animation-delay:0.2s; background:#06d6a0;}
-.waves span:nth-child(4){animation-delay:0.3s; background:#00b4d8;}
-@keyframes wave{0%,100%{height:10px;} 50%{height:40px;}}
+.note-card.pinned{
+  outline:2px solid var(--accent);
+}
 
-.toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#452232; padding:12px 20px; border-radius:20px; font-size:14px; z-index:200; display:none; box-shadow:0 10px 20px rgba(0,0,0,0.5);}
+.note-top{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.dot{
+  width:11px;
+  height:11px;
+  border-radius:50%;
+  box-shadow:0 0 10px var(--accent);
+}
+
+.time{
+  font-size:10px;
+  opacity:.7;
+}
+
+.pin{
+  margin-right:auto;
+  font-size:16px;
+}
+
+.note-text{
+  white-space:pre-wrap;
+  word-break:break-word;
+
+  line-height:1.85;
+
+  font-size:15px;
+
+  font-weight:650;
+
+  margin:
+    0 0 12px;
+}
+
+.reminder{
+  border:
+    1px dashed var(--accent);
+
+  border-radius:12px;
+
+  padding:9px;
+
+  text-align:center;
+
+  font-size:11px;
+
+  margin-bottom:10px;
+
+  line-height:1.7;
+}
+
+.reminder strong{
+  display:block;
+}
+
+.voice-tag{
+  font-size:11px;
+
+  color:var(--accent);
+
+  font-weight:800;
+
+  margin-bottom:8px;
+}
+
+.sound-tag{
+  display:block;
+
+  margin-top:3px;
+
+  opacity:.8;
+}
+
+.note-actions{
+  display:flex;
+  gap:6px;
+
+  justify-content:center;
+
+  flex-wrap:wrap;
+}
+
+.note-actions button{
+  width:38px;
+  height:38px;
+
+  border:0;
+
+  border-radius:11px;
+
+  background:
+    rgba(255,255,255,.09);
+
+  color:inherit;
+}
+
+.note-actions button:active{
+  transform:scale(.9);
+}
+
+.empty{
+  text-align:center;
+
+  padding:50px 10px;
+
+  color:var(--dim);
+}
+
+.empty div{
+  font-size:42px;
+
+  margin-bottom:8px;
+}
+
+/* MODAL */
+
+.modal{
+  display:none;
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:100;
+
+  background:
+    rgba(10,5,8,.82);
+
+  backdrop-filter:
+    blur(7px);
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:15px;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.box{
+  width:100%;
+
+  max-width:500px;
+
+  max-height:90vh;
+
+  overflow:auto;
+
+  background:var(--panel);
+
+  border:1px solid var(--line);
+
+  border-radius:25px;
+
+  padding:20px;
+
+  box-shadow:
+    0 30px 70px rgba(0,0,0,.6);
+}
+
+.box h2{
+  margin:0 0 15px;
+
+  font-size:19px;
+}
+
+label{
+  display:block;
+
+  color:var(--dim);
+
+  font-size:11px;
+
+  font-weight:800;
+
+  margin:12px 0 6px;
+}
+
+textarea,
+input[type="datetime-local"],
+input[type="file"]{
+
+  width:100%;
+
+  padding:13px;
+
+  border:
+    2px solid var(--line);
+
+  border-radius:14px;
+
+  background:#1d0d14;
+
+  color:white;
+
+  outline:none;
+}
+
+textarea{
+  resize:vertical;
+}
+
+input:focus,
+textarea:focus{
+  border-color:#ff477e;
+}
+
+/* COLORS */
+
+.color-title{
+  color:var(--dim);
+
+  font-size:11px;
+
+  font-weight:800;
+
+  margin-top:12px;
+}
+
+.color-row{
+  display:flex;
+
+  gap:8px;
+
+  flex-wrap:wrap;
+
+  margin-top:7px;
+}
+
+.color-item{
+  width:28px;
+  height:28px;
+
+  border-radius:50%;
+
+  border:
+    3px solid transparent;
+
+  cursor:pointer;
+}
+
+.color-item.selected{
+  border-color:white;
+
+  box-shadow:
+    0 0 0 2px var(--accent);
+}
+
+/* SOUND */
+
+.sound-box{
+
+  border:
+    1px solid var(--line);
+
+  border-radius:15px;
+
+  padding:12px;
+
+  margin-top:10px;
+}
+
+.sound-name{
+
+  font-size:12px;
+
+  color:var(--dim);
+
+  word-break:break-word;
+
+  margin-top:7px;
+
+  line-height:1.6;
+}
+
+.sound-buttons{
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:7px;
+
+  margin-top:8px;
+}
+
+.full-btn{
+
+  width:100%;
+
+  border:0;
+
+  border-radius:14px;
+
+  padding:13px;
+
+  margin-top:8px;
+
+  font-weight:900;
+}
+
+.primary{
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff477e,
+      #9b5de5
+    );
+
+  color:white;
+}
+
+.secondary{
+
+  background:#482333;
+
+  color:white;
+}
+
+.danger-btn{
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff6565,
+      #b60000
+    );
+
+  color:white;
+}
+
+.info{
+
+  background:
+    rgba(255,255,255,.05);
+
+  border-radius:14px;
+
+  padding:12px;
+
+  color:var(--dim);
+
+  font-size:11px;
+
+  line-height:1.7;
+
+  margin-top:10px;
+}
+
+.row{
+
+  display:flex;
+
+  gap:8px;
+
+  margin-top:16px;
+}
+
+.row button{
+
+  flex:1;
+
+  border:0;
+
+  border-radius:14px;
+
+  padding:13px;
+
+  font-weight:900;
+}
+
+/* VOICE */
+
+.wave{
+
+  font-size:30px;
+
+  display:inline-block;
+
+  animation:
+    wave 1s infinite ease-in-out;
+}
+
+.wave:nth-child(2){
+  animation-delay:.1s;
+}
+
+.wave:nth-child(3){
+  animation-delay:.2s;
+}
+
+.wave:nth-child(4){
+  animation-delay:.3s;
+}
+
+.wave:nth-child(5){
+  animation-delay:.4s;
+}
+
+@keyframes wave{
+
+  0%,100%{
+    transform:scaleY(.4);
+  }
+
+  50%{
+    transform:scaleY(1.7);
+  }
+
+}
+
+/* BADGE */
+
+.badge{
+
+  display:inline-block;
+
+  padding:4px 8px;
+
+  border-radius:8px;
+
+  background:#06d6a0;
+
+  color:#082218;
+
+  font-size:9px;
+
+  font-weight:900;
+}
+
+/* TOAST */
+
+.toast{
+
+  position:fixed;
+
+  bottom:20px;
+
+  left:50%;
+
+  transform:
+    translateX(-50%);
+
+  z-index:500;
+
+  background:#422131;
+
+  border:
+    1px solid #69344b;
+
+  color:white;
+
+  padding:13px 20px;
+
+  border-radius:15px;
+
+  display:none;
+
+  font-size:12px;
+
+  font-weight:800;
+
+  max-width:90%;
+
+  text-align:center;
+}
+
 </style>
 </head>
+
 <body>
 
 <div class="app">
-  <div class="header">
-    <div class="brand">🗒️ ملاحظاتي (نسخة الأوفلاين)</div>
-    <button class="actions button" onclick="openSettings()" style="background:var(--panel); padding:10px 15px; border-radius:15px; border:1px solid var(--line);">⚙️ الإعدادات</button>
+
+<header class="header">
+
+  <div class="brand">
+
+    <span class="brand-icon">
+      🗒️
+    </span>
+
+    <div>
+
+      <b>ملاحظاتي</b>
+
+      <small>
+        حفظ محلي • يعمل بدون إنترنت
+      </small>
+
+    </div>
+
   </div>
 
-  <button id="micBtn" class="mic-btn" onclick="toggleVoiceNote()">🎙️ اضغط للتحدث (ملاحظة صوتية)</button>
-  
-  <div class="controls">
-    <button onclick="openComposer()">✍️ ملاحظة نصية جديدة</button>
-    <button onclick="requestNotificationPermission()">🔔 تفعيل التنبيهات</button>
+  <div class="header-actions">
+
+    <button
+      class="icon-btn"
+      onclick="openSettings()">
+      ⚙️
+    </button>
+
+    <button
+      class="icon-btn"
+      onclick="newNote()">
+      ＋
+    </button>
+
   </div>
 
-  <input type="text" id="search" class="searchbar" placeholder="ابحث في ملاحظاتك..." oninput="renderNotes()">
+</header>
 
-  <div class="grid" id="grid"></div>
+
+<section class="hero">
+
+  <h1>
+    سجّل فكرتك بسرعة 🎙️
+  </h1>
+
+  <p>
+    اكتب ملاحظتك أو تحدث وسيتم تحويل كلامك إلى نص.
+  </p>
+
+  <button
+    id="micBtn"
+    class="mic-btn"
+    onclick="toggleVoiceNote()">
+
+    🎙️ ملاحظة صوتية جديدة
+
+  </button>
+
+</section>
+
+
+<div class="stats">
+
+  <div class="stat">
+
+    <span>
+      كل الملاحظات
+    </span>
+
+    <b id="totalCount">
+      0
+    </b>
+
+  </div>
+
+  <div class="stat">
+
+    <span>
+      المثبتة
+    </span>
+
+    <b id="pinnedCount">
+      0
+    </b>
+
+  </div>
+
+  <div class="stat">
+
+    <span>
+      التذكيرات
+    </span>
+
+    <b id="reminderCount">
+      0
+    </b>
+
+  </div>
+
 </div>
 
-<!-- Composer Modal -->
-<div class="modal" id="composerModal">
+
+<input
+  id="search"
+  class="searchbar"
+  placeholder="🔎 ابحث في ملاحظاتك..."
+  oninput="render()">
+
+
+<div
+  id="grid"
+  class="grid">
+</div>
+
+</div>
+
+
+<!-- =========================
+     EDITOR
+========================= -->
+
+<div
+  class="modal"
+  id="editorModal">
+
   <div class="box">
-    <h3 id="modalTitle">إضافة ملاحظة</h3>
-    <label>نص الملاحظة</label>
-    <textarea id="noteText" rows="4"></textarea>
-    
-    <div style="display:flex; gap:20px;">
-      <div style="flex:1;">
-        <label>لون الخلفية</label>
-        <input type="color" id="bgColor" value="#311824">
-      </div>
-      <div style="flex:1;">
-        <label>لون الخط</label>
-        <input type="color" id="textColor" value="#ffffff">
-      </div>
+
+    <h2 id="editorTitle">
+      ✍️ ملاحظة جديدة
+    </h2>
+
+
+    <label>
+      نص الملاحظة
+    </label>
+
+    <textarea
+      id="noteText"
+      rows="5"
+      placeholder="اكتب ملاحظتك هنا..."></textarea>
+
+
+    <div class="color-title">
+      🎨 لون الخلفية
     </div>
 
-    <label>تنبيه في وقت محدد (تذكير)</label>
-    <input type="datetime-local" id="noteReminder">
-
-    <div class="btn-row">
-      <button class="btn-primary" onclick="saveNote()">حفظ</button>
-      <button class="btn-secondary" onclick="closeModals()">إلغاء</button>
+    <div
+      class="color-row"
+      id="bgColors">
     </div>
+
+
+    <div class="color-title">
+      🖊️ لون الخط
+    </div>
+
+    <div
+      class="color-row"
+      id="textColors">
+    </div>
+
+
+    <!-- REMINDER -->
+
+    <label>
+      ⏰ موعد التذكير لهذه الملاحظة
+    </label>
+
+    <input
+      type="datetime-local"
+      id="reminderTime">
+
+
+    <!-- SOUND -->
+
+    <div class="sound-box">
+
+      <label>
+        🎵 نغمة هذا التذكير
+      </label>
+
+      <input
+        type="file"
+        id="soundFile"
+        accept="audio/*">
+
+      <div
+        class="sound-name"
+        id="soundName">
+
+        لم يتم اختيار نغمة
+
+      </div>
+
+
+      <div class="sound-buttons">
+
+        <button
+          class="full-btn secondary"
+          onclick="previewSound()">
+
+          ▶️ تجربة النغمة
+
+        </button>
+
+        <button
+          class="full-btn danger-btn"
+          onclick="clearSound()">
+
+          🔕 إزالة النغمة
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="info">
+
+      <b>🔔 تنبيه مهم</b>
+
+      <br><br>
+
+      يمكنك تحديد موعد مختلف ونغمة مختلفة
+      لكل ملاحظة.
+
+      <br><br>
+
+      النغمة المختارة يتم حفظها محليًا
+      داخل الجهاز.
+
+      <br><br>
+
+      إذا كان التطبيق مفتوحًا يستطيع تشغيل
+      النغمة المختارة عند الموعد.
+
+    </div>
+
+
+    <div class="row">
+
+      <button
+        class="primary"
+        onclick="saveNote()">
+
+        💾 حفظ
+
+      </button>
+
+      <button
+        class="secondary"
+        onclick="closeEditor()">
+
+        إلغاء
+
+      </button>
+
+    </div>
+
   </div>
+
 </div>
 
-<!-- Settings Modal -->
-<div class="modal" id="settingsModal">
+
+<!-- =========================
+     VOICE
+========================= -->
+
+<div
+  class="modal"
+  id="voiceModal">
+
+  <div
+    class="box"
+    style="text-align:center">
+
+    <h2>
+      🎙️ يستمع الآن...
+    </h2>
+
+    <div
+      style="
+      height:70px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:6px;
+      background:#170b11;
+      border-radius:15px;">
+
+      <span class="wave">▮</span>
+      <span class="wave">▮</span>
+      <span class="wave">▮</span>
+      <span class="wave">▮</span>
+      <span class="wave">▮</span>
+
+    </div>
+
+    <h2 id="recTimer">
+      00:00
+    </h2>
+
+    <p id="liveText">
+      جاري تشغيل الميكروفون...
+    </p>
+
+    <div class="row">
+
+      <button
+        class="danger-btn"
+        onclick="stopVoiceNote()">
+
+        ⏹ إيقاف وحفظ
+
+      </button>
+
+      <button
+        class="secondary"
+        onclick="cancelVoiceNote()">
+
+        إلغاء
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     REVIEW VOICE
+========================= -->
+
+<div
+  class="modal"
+  id="reviewModal">
+
   <div class="box">
-    <h3>⚙️ إعدادات التنبيهات</h3>
-    <p style="font-size:12px; color:#cba8b9;">اختر نغمة مخصصة من جهازك لتعمل وقت التذكير (سيتم حفظها محلياً).</p>
-    
-    <label>رفع نغمة (ملف صوتي):</label>
-    <input type="file" id="audioUpload" accept="audio/*" style="font-size:13px;">
-    
-    <button onclick="testCustomAudio()" style="margin-top:10px; width:100%; padding:10px; border-radius:10px; background:#452232; border:none; cursor:pointer;">▶️ تجربة النغمة المحفوظة</button>
 
-    <div class="btn-row">
-      <button class="btn-primary" onclick="closeModals()">إغلاق</button>
+    <h2>
+      ✅ مراجعة النص
+    </h2>
+
+    <textarea
+      id="reviewText"
+      rows="6"
+      placeholder="النص المستخرج..."></textarea>
+
+
+    <div class="color-title">
+      🎨 لون الخلفية
     </div>
+
+    <div
+      class="color-row"
+      id="reviewBgColors">
+    </div>
+
+
+    <div class="color-title">
+      🖊️ لون الخط
+    </div>
+
+    <div
+      class="color-row"
+      id="reviewTextColors">
+    </div>
+
+
+    <div class="row">
+
+      <button
+        class="primary"
+        onclick="saveVoiceReview()">
+
+        💾 حفظ
+
+      </button>
+
+      <button
+        class="secondary"
+        onclick="discardReview()">
+
+        إلغاء
+
+      </button>
+
+    </div>
+
   </div>
+
 </div>
 
-<!-- Voice Modal -->
-<div class="modal" id="voiceModal">
-  <div class="box" style="text-align:center;">
-    <h3>🎙️ جاري الاستماع...</h3>
-    <div class="waves"><span></span><span></span><span></span><span></span></div>
-    <p id="liveText" style="margin:20px 0; color:#cba8b9;">تحدث الآن باللغة العربية...</p>
-    <div class="btn-row">
-      <button class="btn-primary" onclick="stopVoiceNote()" style="background:#c92a2a;">⏹ إيقاف وحفظ</button>
+
+<!-- =========================
+     SETTINGS
+========================= -->
+
+<div
+  class="modal"
+  id="settingsModal">
+
+  <div class="box">
+
+    <h2>
+      ⚙️ الإعدادات
+    </h2>
+
+
+    <button
+      class="full-btn primary"
+      onclick="requestNotificationPermission()">
+
+      🔔 تفعيل الإشعارات
+
+    </button>
+
+
+    <button
+      class="full-btn secondary"
+      onclick="testNotification()">
+
+      🧪 اختبار الإشعار
+
+    </button>
+
+
+    <button
+      class="full-btn secondary"
+      onclick="exportBackup()">
+
+      📤 تصدير نسخة احتياطية
+
+    </button>
+
+
+    <label>
+      استعادة نسخة احتياطية
+    </label>
+
+    <input
+      type="file"
+      id="backupFile"
+      accept=".json"
+      onchange="importBackup(event)">
+
+
+    <div class="info">
+
+      <span class="badge">
+        LOCAL
+      </span>
+
+      <br><br>
+
+      الملاحظات والنغمات يتم حفظها محليًا
+      داخل الجهاز.
+
+      <br><br>
+
+      لا يحتاج النظام إلى قاعدة بيانات خارجية.
+
+      <br><br>
+
+      <b>
+        ملاحظة:
+      </b>
+
+      تشغيل JavaScript بشكل دوري والتشغيل
+      التلقائي لملف صوتي مخصص أثناء إغلاق
+      التطبيق بالكامل يعتمد على قيود نظام
+      Android والمتصفح، ولا يمكن لـPWA ضمانه
+      بدون خدمة خلفية من النظام.
+
     </div>
+
+
+    <div class="row">
+
+      <button
+        class="secondary"
+        onclick="closeSettings()">
+
+        إغلاق
+
+      </button>
+
+    </div>
+
   </div>
+
 </div>
 
-<div class="toast" id="toast"></div>
+
+<div
+  class="toast"
+  id="toast">
+</div>
+
 
 <script>
-/* -------------------------------------------------------------------------- */
-/* 1. قاعدة البيانات المحلية (IndexedDB) */
-/* -------------------------------------------------------------------------- */
-const DB_NAME = 'NotesOfflineDB';
-let db;
 
-function initDB() {
-    const request = indexedDB.open(DB_NAME, 2);
-    request.onupgradeneeded = (e) => {
-        db = e.target.result;
-        if (!db.objectStoreNames.contains('notes')) db.createObjectStore('notes', { keyPath: 'id' });
-        if (!db.objectStoreNames.contains('settings')) db.createObjectStore('settings', { keyPath: 'key' });
-    };
-    request.onsuccess = (e) => { 
-        db = e.target.result; 
-        renderNotes(); 
-        startReminderChecker();
-    };
+/* =====================================================
+   STORAGE
+===================================================== */
+
+const KEY =
+  "brilliantNotesV8";
+
+
+const ACCENTS = [
+  "#ff477e",
+  "#ffb703",
+  "#06d6a0",
+  "#9b5de5",
+  "#00b4d8",
+  "#f15bb5",
+  "#ffffff",
+  "#ffd6e7"
+];
+
+
+const BG_COLORS = [
+  "#1b0d14",
+  "#29121c",
+  "#10251f",
+  "#17152d",
+  "#172431",
+  "#30200d",
+  "#321322",
+  "#101820"
+];
+
+
+const TEXT_COLORS = [
+  "#ffffff",
+  "#ffe5ef",
+  "#ffd166",
+  "#06d6a0",
+  "#90e0ef",
+  "#cdb4db",
+  "#ff9f9f",
+  "#eeeeee"
+];
+
+
+let notes = [];
+
+
+try{
+
+  notes =
+    JSON.parse(
+      localStorage.getItem(KEY) || "[]"
+    );
+
+  if(!Array.isArray(notes))
+    notes=[];
+
+}catch(e){
+
+  notes=[];
+
 }
-initDB();
 
-const toast = (msg) => {
-    document.getElementById('toast').textContent = msg;
-    document.getElementById('toast').style.display = 'block';
-    setTimeout(() => document.getElementById('toast').style.display = 'none', 3000);
-};
 
-/* -------------------------------------------------------------------------- */
-/* 2. إدارة الملاحظات */
-/* -------------------------------------------------------------------------- */
-let editingId = null;
+const $ =
+  id => document.getElementById(id);
 
-function openComposer(note = null) {
-    if (note && note.id) {
-        editingId = note.id;
-        document.getElementById('modalTitle').textContent = 'تعديل الملاحظة';
-        document.getElementById('noteText').value = note.text;
-        document.getElementById('bgColor').value = note.bgColor || '#311824';
-        document.getElementById('textColor').value = note.textColor || '#ffffff';
-        document.getElementById('noteReminder').value = note.reminderAt || '';
-    } else {
-        editingId = null;
-        document.getElementById('modalTitle').textContent = 'ملاحظة جديدة';
-        // لا نفرغ النص إذا كان قادماً من التسجيل الصوتي وتم وضعه مسبقاً
-        if(!document.getElementById('noteText').value) {
-            document.getElementById('noteText').value = '';
-        }
-        document.getElementById('bgColor').value = '#311824';
-        document.getElementById('textColor').value = '#ffffff';
-        document.getElementById('noteReminder').value = '';
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function uid(){
+
+  return (
+    Date.now().toString()
+    +
+    Math.random()
+      .toString(16)
+      .slice(2)
+  );
+
+}
+
+
+function toast(text){
+
+  const el =
+    $("toast");
+
+  el.textContent=text;
+
+  el.style.display="block";
+
+  clearTimeout(
+    window.toastTimer
+  );
+
+  window.toastTimer =
+    setTimeout(()=>{
+
+      el.style.display="none";
+
+    },2600);
+
+}
+
+
+function persist(){
+
+  try{
+
+    localStorage.setItem(
+      KEY,
+      JSON.stringify(notes)
+    );
+
+    render();
+
+  }catch(e){
+
+    toast(
+      "⚠️ مساحة التخزين ممتلئة. حاول إزالة بعض النغمات."
+    );
+
+  }
+
+}
+
+
+function fmtTime(date){
+
+  const d =
+    new Date(date);
+
+  if(isNaN(d))
+    return "";
+
+  return d.toLocaleString(
+    "ar-SA",
+    {
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
     }
-    document.getElementById('composerModal').classList.add('show');
+  );
+
 }
 
-function closeModals() {
-    document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
-    document.getElementById('noteText').value = ''; // تفريغ بعد الإلغاء
+
+function escapeHTML(str){
+
+  return String(str)
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
 }
 
-function saveNote() {
-    const text = document.getElementById('noteText').value.trim();
-    if (!text) return toast('اكتب شيئاً!');
 
-    const note = {
-        id: editingId || Date.now().toString(),
-        text: text,
-        bgColor: document.getElementById('bgColor').value,
-        textColor: document.getElementById('textColor').value,
-        reminderAt: document.getElementById('noteReminder').value,
-        pinned: editingId ? undefined : false,
-        reminded: false
+/* =====================================================
+   COLORS
+===================================================== */
+
+let selectedBg =
+  BG_COLORS[0];
+
+let selectedText =
+  TEXT_COLORS[0];
+
+
+function createColors(
+  container,
+  colors,
+  selected,
+  onPick
+){
+
+  container.innerHTML="";
+
+  colors.forEach(c=>{
+
+    const el =
+      document.createElement(
+        "span"
+      );
+
+    el.className =
+      "color-item";
+
+    el.style.background =
+      c;
+
+    if(c===selected)
+      el.classList.add(
+        "selected"
+      );
+
+    el.onclick=()=>{
+
+      [
+        ...container.children
+      ].forEach(x=>
+        x.classList.remove(
+          "selected"
+        )
+      );
+
+      el.classList.add(
+        "selected"
+      );
+
+      onPick(c);
+
     };
 
-    if (editingId) {
-        const tx = db.transaction('notes', 'readonly');
-        const req = tx.objectStore('notes').get(editingId);
-        req.onsuccess = () => {
-            const oldNote = req.result;
-            note.pinned = oldNote.pinned;
-            note.createdAt = oldNote.createdAt;
-            saveToDB(note);
+    container.appendChild(el);
+
+  });
+
+}
+
+
+/* =====================================================
+   RENDER
+===================================================== */
+
+function render(){
+
+  const q =
+    $("search")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const arr =
+    notes
+
+      .filter(n=>
+        String(
+          n.text || ""
+        )
+        .toLowerCase()
+        .includes(q)
+      )
+
+      .sort((a,b)=>{
+
+        if(
+          Boolean(b.pinned)
+          !==
+          Boolean(a.pinned)
+        ){
+
+          return b.pinned-a.pinned;
+
         }
-    } else {
-        note.createdAt = new Date().toISOString();
-        saveToDB(note);
-    }
-}
 
-function saveToDB(note) {
-    const tx = db.transaction('notes', 'readwrite');
-    tx.objectStore('notes').put(note);
-    tx.oncomplete = () => {
-        closeModals();
-        renderNotes();
-        scheduleBackgroundNotification(note);
-        toast('تم الحفظ بنجاح');
-    };
-}
+        return (
+          new Date(b.createdAt)
+          -
+          new Date(a.createdAt)
+        );
 
-function deleteNote(id) {
-    if(!confirm('حذف الملاحظة؟')) return;
-    const tx = db.transaction('notes', 'readwrite');
-    tx.objectStore('notes').delete(id);
-    tx.oncomplete = () => { renderNotes(); toast('تم الحذف'); };
-}
+      });
 
-function togglePin(id) {
-    const tx = db.transaction('notes', 'readwrite');
-    const store = tx.objectStore('notes');
-    store.get(id).onsuccess = (e) => {
-        const note = e.target.result;
-        note.pinned = !note.pinned;
-        store.put(note).onsuccess = () => renderNotes();
-    };
-}
 
-function renderNotes() {
-    const q = document.getElementById('search').value.trim().toLowerCase();
-    const tx = db.transaction('notes', 'readonly');
-    const req = tx.objectStore('notes').getAll();
-    req.onsuccess = () => {
-        let notes = req.result;
-        notes = notes.filter(n => n.text.toLowerCase().includes(q));
-        notes.sort((a,b) => (b.pinned - a.pinned) || (new Date(b.createdAt) - new Date(a.createdAt)));
-        
-        const grid = document.getElementById('grid');
-        grid.innerHTML = notes.map(n => `
-            <div class="note-card ${n.pinned ? 'pinned' : ''}" style="background:${n.bgColor}; color:${n.textColor}">
-                <div class="note-header">
-                    <span>${new Date(n.createdAt).toLocaleDateString()}</span>
-                    ${n.pinned ? '📌' : ''}
-                </div>
-                <div class="note-text">${n.text}</div>
-                ${n.reminderAt ? `<div class="reminder-badge">⏰ ${new Date(n.reminderAt).toLocaleString()}</div>` : ''}
-                
-                <div class="actions">
-                    <button onclick='speakText(\`${n.text}\`)' title="قراءة">🔊</button>
-                    <button onclick='copyText(\`${n.text}\`)' title="نسخ">📋</button>
-                    <button onclick="togglePin('${n.id}')" title="تثبيت">📌</button>
-                    <button onclick='openComposer(${JSON.stringify(n).replace(/'/g, "\\'")})' title="تعديل">✏️</button>
-                    <button onclick="deleteNote('${n.id}')" title="حذف" style="background:rgba(200,0,0,0.3)">🗑️</button>
-                </div>
-            </div>
-        `).join('') || '<div style="text-align:center; color:#888; grid-column:1/-1;">لا توجد ملاحظات</div>';
-    };
-}
+  $("totalCount").textContent =
+    notes.length;
 
-function copyText(text) {
-    navigator.clipboard.writeText(text);
-    toast('تم النسخ للحافظة');
-}
 
-/* -------------------------------------------------------------------------- */
-/* 3. الإعدادات والتنبيهات */
-/* -------------------------------------------------------------------------- */
-function openSettings() { document.getElementById('settingsModal').classList.add('show'); }
+  $("pinnedCount").textContent =
+    notes.filter(
+      n=>n.pinned
+    ).length;
 
-document.getElementById('audioUpload').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(event) {
-        const base64Audio = event.target.result;
-        const tx = db.transaction('settings', 'readwrite');
-        tx.objectStore('settings').put({ key: 'customRingtone', data: base64Audio });
-        tx.oncomplete = () => toast('✅ تم حفظ النغمة المخصصة بنجاح!');
-    };
-    reader.readAsDataURL(file);
-});
 
-function testCustomAudio() { playAlarm(); }
+  $("reminderCount").textContent =
+    notes.filter(
+      n=>n.reminder
+    ).length;
 
-function playAlarm() {
-    const tx = db.transaction('settings', 'readonly');
-    const req = tx.objectStore('settings').get('customRingtone');
-    req.onsuccess = () => {
-        if (req.result && req.result.data) {
-            const audio = new Audio(req.result.data);
-            audio.play().catch(e => toast('يجب التفاعل مع الشاشة لتشغيل الصوت'));
-        } else {
-            playFallbackBeep();
-        }
-    };
-}
 
-function playFallbackBeep() {
-    try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const o = ctx.createOscillator();
-        o.type = 'square'; o.frequency.value = 880;
-        o.connect(ctx.destination);
-        o.start(); o.stop(ctx.currentTime + 0.5);
-    } catch(e) {}
-}
+  if(!arr.length){
 
-async function requestNotificationPermission() {
-    if ('Notification' in window) {
-        const perm = await Notification.requestPermission();
-        if (perm === 'granted') toast('تم تفعيل التنبيهات بنجاح');
-        else toast('تم رفض التنبيهات من المتصفح');
-    }
-}
+    $("grid").innerHTML=`
 
-function startReminderChecker() {
-    setInterval(() => {
-        const now = new Date().getTime();
-        const tx = db.transaction('notes', 'readwrite');
-        const store = tx.objectStore('notes');
-        store.getAll().onsuccess = (e) => {
-            const notes = e.target.result;
-            notes.forEach(note => {
-                if (note.reminderAt && !note.reminded) {
-                    const remTime = new Date(note.reminderAt).getTime();
-                    if (now >= remTime) {
-                        playAlarm();
-                        if(Notification.permission === 'granted') {
-                            try{ new Notification('⏰ تذكير بملاحظتك', { body: note.text }); }catch(err){}
-                        }
-                        note.reminded = true;
-                        store.put(note);
-                        toast('⏰ تذكير: ' + note.text);
-                    }
-                }
-            });
-        };
-    }, 10000);
-}
+      <div class="empty">
 
-async function scheduleBackgroundNotification(note) {
-    if (!note.reminderAt || Notification.permission !== 'granted') return;
-    const remTime = new Date(note.reminderAt).getTime();
-    if (remTime <= Date.now()) return;
+        <div>🗒️</div>
 
-    if ('serviceWorker' in navigator) {
-        const reg = await navigator.serviceWorker.ready;
-        if ('showTrigger' in Notification.prototype) {
-            reg.showNotification('⏰ تذكير (ملاحظاتي)', {
-                body: note.text,
-                showTrigger: new TimestampTrigger(remTime),
-                tag: 'rem-' + note.id
-            }).catch(e => console.log('Trigger failed', e));
-        }
-    }
-}
+        لا توجد ملاحظات
 
-function speakText(txt) {
-    if(!('speechSynthesis' in window)) return toast('جهازك لا يدعم القراءة الصوتية');
-    const u = new SpeechSynthesisUtterance(txt);
-    u.lang = 'ar-SA';
-    speechSynthesis.speak(u);
-}
+      </div>
 
-/* -------------------------------------------------------------------------- */
-/* 4. محرك الصوت المعدّل جذرياً والمقاوم لأخطاء PWA والأندرويد */
-/* -------------------------------------------------------------------------- */
-let recognition = null;
-let recActive = false;
-let finalSpeechText = ''; // لتخزين النص الموثوق وعدم مسحه
-
-function toggleVoiceNote() {
-    if(recActive) { stopVoiceNote(); return; }
-    
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(!SR) return alert('متصفحك لا يدعم هذه الميزة. يرجى استخدام متصفح كروم.');
-
-    // تصفير المتغيرات للبدء بنظافة تامة
-    finalSpeechText = '';
-    recActive = true;
-    
-    document.getElementById('voiceModal').classList.add('show');
-    document.getElementById('liveText').textContent = 'تحدث الآن...';
-    
-    // بناء كائن جديد في كل ضغطة يمنع تجميد الجوال للميكروفون القديم
-    recognition = new SR();
-    recognition.lang = 'ar-SA';
-    recognition.continuous = false; // نتركه false لكي لا يحظره الجوال بقوة
-    recognition.interimResults = true;
-
-    recognition.onresult = (e) => {
-        let interim = '';
-        let currentFinal = '';
-        for(let i = e.resultIndex; i < e.results.length; i++){
-            if(e.results[i].isFinal) currentFinal += e.results[i][0].transcript + ' ';
-            else interim += e.results[i][0].transcript;
-        }
-        
-        if(currentFinal) finalSpeechText += currentFinal;
-        document.getElementById('liveText').textContent = finalSpeechText + interim;
-    };
-
-    recognition.onerror = (e) => {
-        if(e.error === 'network') document.getElementById('liveText').textContent = '⚠️ تأكد من اتصال الإنترنت.';
-        if(e.error === 'not-allowed') document.getElementById('liveText').textContent = '⚠️ يرجى إعطاء صلاحية الميكروفون.';
-    };
-
-    recognition.onend = () => {
-        // إذا سكت المستخدم قليلاً وتوقف الميكروفون، نعيد تشغيله برفق بعد 300 ملي ثانية 
-        // التأخير البسيط يمنع نظام الأندرويد من اعتبار التطبيق خبيثاً ويسمح بتشغيله مجدداً
-        if(recActive) {
-            setTimeout(() => {
-                if(recActive && recognition) {
-                    try { recognition.start(); } catch(err) {}
-                }
-            }, 300); 
-        }
-    };
-
-    try { recognition.start(); } catch(e) {}
-}
-
-function stopVoiceNote() {
-    recActive = false; // هذا يوقف دائرة onend نهائياً
-    if(recognition) {
-        try { recognition.stop(); } catch(e) {}
-        recognition = null; // تفريغ الذاكرة
-    }
-    
-    document.getElementById('voiceModal').classList.remove('show');
-    
-    // استخراج النص وتجاهل رسائل النظام
-    let extractedText = document.getElementById('liveText').textContent;
-    extractedText = extractedText.replace('تحدث الآن...', '').replace('⚠️ تأكد من اتصال الإنترنت.', '').trim();
-    
-    if(extractedText) {
-        // نضع النص في حقل المحرر ونفتحه للمستخدم ليختار اللون ويحفظ
-        document.getElementById('noteText').value = extractedText;
-        openComposer(); 
-    } else {
-        toast('لم يتم التقاط أي نص');
-    }
-}
-
-/* -------------------------------------------------------------------------- */
-/* 5. Service Worker للتطبيق (PWA Offline) */
-/* -------------------------------------------------------------------------- */
-if ('serviceWorker' in navigator) {
-    const swCode = `
-        const CACHE = 'notes-offline-v2';
-        self.addEventListener('install', e => {
-            self.skipWaiting();
-            e.waitUntil(caches.open(CACHE).then(c => c.addAll([location.href])));
-        });
-        self.addEventListener('fetch', e => {
-            e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
-        });
     `;
-    const blob = new Blob([swCode], { type: 'application/javascript' });
-    const swUrl = URL.createObjectURL(blob);
-    navigator.serviceWorker.register(swUrl).catch(()=>{});
+
+    return;
+
+  }
+
+
+  $("grid").innerHTML =
+    arr.map(n=>{
+
+      const color =
+        n.color ||
+        "#ff477e";
+
+
+      const safeText =
+        escapeHTML(
+          n.text || ""
+        );
+
+
+      let reminderHTML="";
+
+
+      if(n.reminder){
+
+        reminderHTML=`
+
+          <div
+            class="reminder">
+
+            🔔
+
+            <strong>
+              ${fmtTime(n.reminder)}
+            </strong>
+
+            ${
+              n.soundName
+              ?
+              `
+              <span
+                class="sound-tag">
+
+                🎵
+                ${escapeHTML(
+                  n.soundName
+                )}
+
+              </span>
+              `
+              :
+              `
+              <span
+                class="sound-tag">
+
+                🔊 نغمة الجهاز الافتراضية
+
+              </span>
+              `
+            }
+
+          </div>
+
+        `;
+
+      }
+
+
+      return `
+
+      <div
+        class="note-wrap"
+        style="
+          --accent:${color};
+        ">
+
+
+        <div
+          class="note-shadow"
+          style="
+            background:${color};
+          ">
+        </div>
+
+
+        <div
+          class="note-card
+          ${n.pinned ? "pinned":""}"
+
+          style="
+            --card-bg:
+              ${n.bgColor || "#1b0d14"};
+
+            --card-text:
+              ${n.textColor || "#fff"};
+          ">
+
+
+          <div
+            class="note-top">
+
+            <span
+              class="dot"
+              style="
+                background:${color};
+              ">
+            </span>
+
+            <span
+              class="time">
+
+              ${fmtTime(
+                n.createdAt
+              )}
+
+            </span>
+
+            ${
+              n.pinned
+              ?
+              `
+              <span
+                class="pin">
+                📌
+              </span>
+              `
+              :
+              ""
+            }
+
+          </div>
+
+
+          ${
+            n.voice
+            ?
+            `
+            <div
+              class="voice-tag">
+
+              🎙️ ملاحظة صوتية
+
+            </div>
+            `
+            :
+            ""
+          }
+
+
+          <p
+            class="note-text">
+
+            ${safeText}
+
+          </p>
+
+
+          ${reminderHTML}
+
+
+          <div
+            class="note-actions">
+
+
+            <button
+              title="تعديل"
+              onclick="
+                editNote('${n.id}')
+              ">
+
+              ✏️
+
+            </button>
+
+
+            <button
+              title="تثبيت"
+              onclick="
+                togglePin('${n.id}')
+              ">
+
+              ${
+                n.pinned
+                ?
+                "📌"
+                :
+                "📍"
+              }
+
+            </button>
+
+
+            ${
+              n.soundData
+              ?
+              `
+              <button
+                title="تشغيل النغمة"
+                onclick="
+                  playNoteSound('${n.id}')
+                ">
+
+                🔊
+
+              </button>
+              `
+              :
+              ""
+            }
+
+
+            <button
+              title="مشاركة"
+              onclick="
+                shareNote('${n.id}')
+              ">
+
+              📤
+
+            </button>
+
+
+            <button
+              title="نسخ"
+              onclick="
+                copyNote('${n.id}')
+              ">
+
+              📋
+
+            </button>
+
+
+            <button
+              title="حذف"
+              onclick="
+                deleteNote('${n.id}')
+              ">
+
+              🗑️
+
+            </button>
+
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+      `;
+
+    }).join("");
+
 }
+
+
+/* =====================================================
+   EDITOR
+===================================================== */
+
+let editingId =
+  null;
+
+let soundData =
+  null;
+
+let soundName =
+  "";
+
+
+/* NEW */
+
+function newNote(){
+
+  editingId=null;
+
+  $("editorTitle")
+    .textContent=
+    "✍️ ملاحظة جديدة";
+
+
+  $("noteText").value="";
+
+  $("reminderTime").value="";
+
+
+  soundData=null;
+
+  soundName="";
+
+
+  $("soundName")
+    .textContent=
+    "لم يتم اختيار نغمة";
+
+
+  $("soundFile").value="";
+
+
+  selectedBg =
+    BG_COLORS[0];
+
+
+  selectedText =
+    TEXT_COLORS[0];
+
+
+  createColors(
+    $("bgColors"),
+    BG_COLORS,
+    selectedBg,
+    c=>selectedBg=c
+  );
+
+
+  createColors(
+    $("textColors"),
+    TEXT_COLORS,
+    selectedText,
+    c=>selectedText=c
+  );
+
+
+  $("editorModal")
+    .classList.add("show");
+
+
+  setTimeout(
+    ()=>
+      $("noteText").focus(),
+    100
+  );
+
+}
+
+
+/* EDIT */
+
+function editNote(id){
+
+  const n =
+    notes.find(
+      x=>x.id===id
+    );
+
+  if(!n)
+    return;
+
+
+  editingId=id;
+
+
+  $("editorTitle")
+    .textContent=
+    "✏️ تعديل الملاحظة";
+
+
+  $("noteText").value =
+    n.text || "";
+
+
+  selectedBg =
+    n.bgColor ||
+    BG_COLORS[0];
+
+
+  selectedText =
+    n.textColor ||
+    TEXT_COLORS[0];
+
+
+  createColors(
+    $("bgColors"),
+    BG_COLORS,
+    selectedBg,
+    c=>selectedBg=c
+  );
+
+
+  createColors(
+    $("textColors"),
+    TEXT_COLORS,
+    selectedText,
+    c=>selectedText=c
+  );
+
+
+  if(n.reminder){
+
+    const d =
+      new Date(
+        n.reminder
+      );
+
+    if(!isNaN(d)){
+
+      const local =
+        new Date(
+          d.getTime()
+          -
+          d.getTimezoneOffset()*60000
+        );
+
+      $("reminderTime")
+        .value=
+        local
+          .toISOString()
+          .slice(0,16);
+
+    }
+
+  }else{
+
+    $("reminderTime")
+      .value="";
+
+  }
+
+
+  soundData =
+    n.soundData ||
+    null;
+
+
+  soundName =
+    n.soundName ||
+    "";
+
+
+  $("soundName")
+    .textContent =
+    soundName ||
+    "لم يتم اختيار نغمة";
+
+
+  $("soundFile").value="";
+
+
+  $("editorModal")
+    .classList.add("show");
+
+}
+
+
+/* CLOSE */
+
+function closeEditor(){
+
+  $("editorModal")
+    .classList.remove("show");
+
+}
+
+
+/* =====================================================
+   SOUND FILE
+===================================================== */
+
+$("soundFile")
+.addEventListener(
+  "change",
+  async function(){
+
+    const file =
+      this.files[0];
+
+    if(!file)
+      return;
+
+
+    if(
+      !file.type.startsWith(
+        "audio/"
+      )
+    ){
+
+      toast(
+        "اختر ملفًا صوتيًا"
+      );
+
+      return;
+
+    }
+
+
+    soundName =
+      file.name;
+
+
+    $("soundName")
+      .textContent =
+      "⏳ جارٍ حفظ النغمة...";
+
+
+    try{
+
+      soundData =
+        await fileToDataURL(
+          file
+        );
+
+
+      $("soundName")
+        .textContent =
+        "🎵 " +
+        file.name;
+
+
+      toast(
+        "تم اختيار النغمة"
+      );
+
+    }catch(e){
+
+      soundData=null;
+
+      soundName="";
+
+      $("soundName")
+        .textContent =
+        "تعذر قراءة الملف";
+
+
+      toast(
+        "تعذر قراءة النغمة"
+      );
+
+    }
+
+  }
+);
+
+
+/* FILE TO DATA */
+
+function fileToDataURL(file){
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        ()=>resolve(
+          reader.result
+        );
+
+      reader.onerror =
+        reject;
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
+}
+
+
+/* PREVIEW */
+
+function previewSound(){
+
+  if(!soundData){
+
+    toast(
+      "لم يتم اختيار نغمة"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    const audio =
+      new Audio(
+        soundData
+      );
+
+    audio.volume=1;
+
+    audio.play()
+      .then(()=>{
+
+        toast(
+          "▶️ تشغيل النغمة"
+        );
+
+      })
+      .catch(()=>{
+
+        toast(
+          "اضغط مرة أخرى لتشغيل النغمة"
+        );
+
+      });
+
+  }catch(e){
+
+    toast(
+      "تعذر تشغيل النغمة"
+    );
+
+  }
+
+}
+
+
+/* PLAY EXISTING NOTE SOUND */
+
+function playNoteSound(id){
+
+  const n =
+    notes.find(
+      x=>x.id===id
+    );
+
+  if(
+    !n ||
+    !n.soundData
+  ){
+
+    toast(
+      "لا توجد نغمة"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    const audio =
+      new Audio(
+        n.soundData
+      );
+
+    audio.volume=1;
+
+    audio.play()
+      .catch(()=>{
+
+        toast(
+          "اضغط مرة أخرى لتشغيل النغمة"
+        );
+
+      });
+
+  }catch(e){
+
+    toast(
+      "تعذر تشغيل النغمة"
+    );
+
+  }
+
+}
+
+
+/* CLEAR */
+
+function clearSound(){
+
+  soundData=null;
+
+  soundName="";
+
+  $("soundName")
+    .textContent=
+    "لم يتم اختيار نغمة";
+
+  $("soundFile").value="";
+
+}
+
+
+/* =====================================================
+   SAVE NOTE
+===================================================== */
+
+function saveNote(){
+
+  const text =
+    $("noteText")
+      .value
+      .trim();
+
+
+  if(!text){
+
+    toast(
+      "اكتب نص الملاحظة أولًا"
+    );
+
+    return;
+
+  }
+
+
+  let reminder=null;
+
+
+  if(
+    $("reminderTime").value
+  ){
+
+    const selected =
+      new Date(
+        $("reminderTime").value
+      );
+
+
+    if(
+      isNaN(selected)
+    ){
+
+      toast(
+        "موعد التذكير غير صحيح"
+      );
+
+      return;
+
+    }
+
+
+    if(
+      selected.getTime()
+      <=
+      Date.now()
+    ){
+
+      toast(
+        "اختر موعدًا في المستقبل"
+      );
+
+      return;
+
+    }
+
+
+    reminder =
+      selected.toISOString();
+
+  }
+
+
+  const now =
+    new Date()
+      .toISOString();
+
+
+  /* EDIT */
+
+  if(editingId){
+
+    const n =
+      notes.find(
+        x=>x.id===editingId
+      );
+
+
+    if(n){
+
+      n.text =
+        text;
+
+      n.bgColor =
+        selectedBg;
+
+      n.textColor =
+        selectedText;
+
+      n.reminder =
+        reminder;
+
+      n.soundData =
+        soundData;
+
+      n.soundName =
+        soundName;
+
+      n.updatedAt =
+        now;
+
+
+      /*
+       مهم:
+       إذا تغير موعد التذكير
+       نسمح بالتذكير من جديد
+      */
+
+      delete firedReminders[
+        n.id
+      ];
+
+    }
+
+
+    toast(
+      "✅ تم تعديل الملاحظة"
+    );
+
+  }
+
+  /* NEW */
+
+  else{
+
+    notes.unshift({
+
+      id:uid(),
+
+      text:text,
+
+      color:
+        ACCENTS[
+          notes.length %
+          ACCENTS.length
+        ],
+
+      bgColor:
+        selectedBg,
+
+      textColor:
+        selectedText,
+
+      createdAt:
+        now,
+
+      updatedAt:
+        now,
+
+      pinned:false,
+
+      voice:false,
+
+      reminder:
+        reminder,
+
+      soundData:
+        soundData,
+
+      soundName:
+        soundName
+
+    });
+
+
+    toast(
+      "✅ تم حفظ الملاحظة"
+    );
+
+  }
+
+
+  persist();
+
+  closeEditor();
+
+}
+
+
+/* =====================================================
+   DELETE
+===================================================== */
+
+function deleteNote(id){
+
+  if(
+    !confirm(
+      "هل تريد حذف هذه الملاحظة؟"
+    )
+  )
+    return;
+
+
+  notes =
+    notes.filter(
+      n=>n.id!==id
+    );
+
+
+  delete firedReminders[id];
+
+
+  persist();
+
+
+  toast(
+    "🗑️ تم حذف الملاحظة"
+  );
+
+}
+
+
+/* =====================================================
+   PIN
+===================================================== */
+
+function togglePin(id){
+
+  const n =
+    notes.find(
+      x=>x.id===id
+    );
+
+  if(!n)
+    return;
+
+
+  n.pinned =
+    !n.pinned;
+
+
+  n.updatedAt =
+    new Date()
+      .toISOString();
+
+
+  persist();
+
+
+  toast(
+    n.pinned
+    ?
+    "📌 تم تثبيت الملاحظة"
+    :
+    "تم إلغاء التثبيت"
+  );
+
+}
+
+
+/* =====================================================
+   COPY
+===================================================== */
+
+async function copyNote(id){
+
+  const n =
+    notes.find(
+      x=>x.id===id
+    );
+
+  if(!n)
+    return;
+
+
+  try{
+
+    await navigator
+      .clipboard
+      .writeText(
+        n.text
+      );
+
+
+    toast(
+      "📋 تم نسخ الملاحظة"
+    );
+
+  }catch(e){
+
+    toast(
+      "تعذر النسخ"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SHARE
+===================================================== */
+
+async function shareNote(id){
+
+  const n =
+    notes.find(
+      x=>x.id===id
+    );
+
+  if(!n)
+    return;
+
+
+  if(
+    navigator.share
+  ){
+
+    try{
+
+      await navigator.share({
+
+        title:
+          "ملاحظاتي",
+
+        text:
+          n.text
+
+      });
+
+    }catch(e){}
+
+  }else{
+
+    copyNote(id);
+
+  }
+
+}
+
+
+/* =====================================================
+   VOICE
+===================================================== */
+
+let recognition=null;
+
+let recognitionShouldRun=false;
+
+let liveTranscript="";
+
+let recStartTime=0;
+
+let recTimerHandle=null;
+
+
+function toggleVoiceNote(){
+
+  if(
+    recognitionShouldRun
+  ){
+
+    stopVoiceNote();
+
+  }else{
+
+    startVoiceNote();
+
+  }
+
+}
+
+
+function startVoiceNote(){
+
+  const SR =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+  if(!SR){
+
+    alert(
+      "التعرف على الصوت غير مدعوم. استخدم Google Chrome."
+    );
+
+    return;
+
+  }
+
+
+  liveTranscript="";
+
+  recognitionShouldRun=true;
+
+  recStartTime =
+    Date.now();
+
+
+  $("micBtn")
+    .classList.add("rec");
+
+
+  $("micBtn")
+    .textContent=
+    "⏹️ إيقاف التسجيل";
+
+
+  $("voiceModal")
+    .classList.add("show");
+
+
+  $("liveText")
+    .textContent=
+    "تحدث الآن بالعربية...";
+
+
+  $("recTimer")
+    .textContent=
+    "00:00";
+
+
+  recTimerHandle =
+    setInterval(()=>{
+
+      const s =
+        Math.floor(
+          (
+            Date.now()
+            -
+            recStartTime
+          ) / 1000
+        );
+
+
+      $("recTimer")
+        .textContent =
+        String(
+          Math.floor(
+            s/60
+          )
+        ).padStart(2,"0")
+        +
+        ":"
+        +
+        String(
+          s%60
+        ).padStart(2,"0");
+
+    },1000);
+
+
+  recognition =
+    new SR();
+
+
+  recognition.lang =
+    "ar-SA";
+
+
+  recognition.continuous =
+    false;
+
+
+  recognition.interimResults =
+    true;
+
+
+  recognition.onstart =
+    ()=>{
+
+      $("liveText")
+        .textContent=
+        "🎙️ تحدث الآن...";
+
+    };
+
+
+  recognition.onresult =
+    e=>{
+
+      let interim="";
+
+      let finalText="";
+
+
+      for(
+        let i=e.resultIndex;
+        i<e.results.length;
+        i++
+      ){
+
+        const t =
+          e.results[i][0]
+            .transcript;
+
+
+        if(
+          e.results[i]
+            .isFinal
+        ){
+
+          finalText +=
+            t + " ";
+
+        }else{
+
+          interim +=
+            t;
+
+        }
+
+      }
+
+
+      if(finalText)
+        liveTranscript +=
+          finalText;
+
+
+      $("liveText")
+        .textContent =
+        liveTranscript
+        +
+        interim;
+
+    };
+
+
+  recognition.onerror =
+    e=>{
+
+      if(
+        e.error===
+        "not-allowed"
+      ){
+
+        $("liveText")
+          .textContent=
+          "❌ تم رفض إذن الميكروفون";
+
+        recognitionShouldRun=false;
+
+      }
+
+      if(
+        e.error===
+        "network"
+      ){
+
+        $("liveText")
+          .textContent=
+          "⚠️ التعرف الصوتي يحتاج خدمة المتصفح.";
+
+      }
+
+    };
+
+
+  recognition.onend =
+    ()=>{
+
+      if(
+        recognitionShouldRun
+      ){
+
+        setTimeout(()=>{
+
+          if(
+            recognitionShouldRun
+          ){
+
+            try{
+
+              recognition.start();
+
+            }catch(e){}
+
+          }
+
+        },300);
+
+      }
+
+    };
+
+
+  try{
+
+    recognition.start();
+
+  }catch(e){}
+
+}
+
+
+function stopVoiceNote(){
+
+  recognitionShouldRun=false;
+
+  clearInterval(
+    recTimerHandle
+  );
+
+
+  if(recognition){
+
+    try{
+
+      recognition.abort();
+
+    }catch(e){}
+
+  }
+
+
+  $("voiceModal")
+    .classList.remove("show");
+
+
+  $("micBtn")
+    .classList.remove("rec");
+
+
+  $("micBtn")
+    .textContent=
+    "🎙️ ملاحظة صوتية جديدة";
+
+
+  $("reviewText")
+    .value=
+    liveTranscript.trim();
+
+
+  selectedBg =
+    BG_COLORS[0];
+
+
+  selectedText =
+    TEXT_COLORS[0];
+
+
+  createColors(
+    $("reviewBgColors"),
+    BG_COLORS,
+    selectedBg,
+    c=>selectedBg=c
+  );
+
+
+  createColors(
+    $("reviewTextColors"),
+    TEXT_COLORS,
+    selectedText,
+    c=>selectedText=c
+  );
+
+
+  $("reviewModal")
+    .classList.add("show");
+
+}
+
+
+function cancelVoiceNote(){
+
+  recognitionShouldRun=false;
+
+  clearInterval(
+    recTimerHandle
+  );
+
+
+  if(recognition){
+
+    try{
+
+      recognition.abort();
+
+    }catch(e){}
+
+  }
+
+
+  $("voiceModal")
+    .classList.remove("show");
+
+
+  $("micBtn")
+    .classList.remove("rec");
+
+
+  $("micBtn")
+    .textContent=
+    "🎙️ ملاحظة صوتية جديدة";
+
+}
+
+
+/* =====================================================
+   SAVE VOICE
+===================================================== */
+
+function saveVoiceReview(){
+
+  const text =
+    $("reviewText")
+      .value
+      .trim();
+
+
+  if(!text){
+
+    toast(
+      "لا يوجد نص للحفظ"
+    );
+
+    return;
+
+  }
+
+
+  const now =
+    new Date()
+      .toISOString();
+
+
+  notes.unshift({
+
+    id:uid(),
+
+    text:text,
+
+    color:
+      ACCENTS[
+        notes.length %
+        ACCENTS.length
+      ],
+
+    bgColor:
+      selectedBg,
+
+    textColor:
+      selectedText,
+
+    createdAt:
+      now,
+
+    updatedAt:
+      now,
+
+    pinned:false,
+
+    voice:true,
+
+    reminder:null,
+
+    soundData:null,
+
+    soundName:""
+
+  });
+
+
+  persist();
+
+
+  $("reviewModal")
+    .classList.remove("show");
+
+
+  toast(
+    "🎙️ تم حفظ الملاحظة الصوتية"
+  );
+
+}
+
+
+function discardReview(){
+
+  $("reviewModal")
+    .classList.remove("show");
+
+}
+
+
+/* =====================================================
+   SETTINGS
+===================================================== */
+
+function openSettings(){
+
+  $("settingsModal")
+    .classList.add("show");
+
+}
+
+
+function closeSettings(){
+
+  $("settingsModal")
+    .classList.remove("show");
+
+}
+
+
+/* =====================================================
+   NOTIFICATIONS
+===================================================== */
+
+async function requestNotificationPermission(){
+
+  if(
+    !("Notification" in window)
+  ){
+
+    toast(
+      "المتصفح لا يدعم الإشعارات"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    const permission =
+      await Notification
+        .requestPermission();
+
+
+    if(
+      permission===
+      "granted"
+    ){
+
+      toast(
+        "🔔 تم تفعيل الإشعارات"
+      );
+
+    }else{
+
+      toast(
+        "لم يتم السماح بالإشعارات"
+      );
+
+    }
+
+  }catch(e){
+
+    toast(
+      "تعذر تفعيل الإشعارات"
+    );
+
+  }
+
+}
+
+
+/* TEST */
+
+async function testNotification(){
+
+  if(
+    !("Notification" in window)
+  ){
+
+    toast(
+      "الإشعارات غير مدعومة"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    Notification.permission !==
+    "granted"
+  ){
+
+    await requestNotificationPermission();
+
+    if(
+      Notification.permission !==
+      "granted"
+    )
+      return;
+
+  }
+
+
+  try{
+
+    if(
+      "serviceWorker"
+      in navigator
+    ){
+
+      const reg =
+        await navigator
+          .serviceWorker
+          .ready;
+
+
+      await reg.showNotification(
+
+        "🗒️ ملاحظاتي",
+
+        {
+
+          body:
+            "هذا اختبار للتنبيه",
+
+          icon:
+            "icon-192.png",
+
+          badge:
+            "icon-192.png",
+
+          tag:
+            "test-note",
+
+          vibrate:
+            [200,100,200]
+
+        }
+
+      );
+
+    }
+
+  }catch(e){
+
+    toast(
+      "تعذر إرسال الإشعار"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   BACKUP
+===================================================== */
+
+function exportBackup(){
+
+  const data =
+    JSON.stringify(
+      notes,
+      null,
+      2
+    );
+
+
+  const blob =
+    new Blob(
+      [data],
+      {
+        type:
+          "application/json"
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(
+      blob
+    );
+
+
+  const a =
+    document.createElement(
+      "a"
+    );
+
+
+  a.href=url;
+
+
+  a.download =
+    "my-notes-backup-"
+    +
+    Date.now()
+    +
+    ".json";
+
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  a.remove();
+
+
+  setTimeout(
+    ()=>URL.revokeObjectURL(url),
+    500
+  );
+
+
+  toast(
+    "📤 تم إنشاء النسخة الاحتياطية"
+  );
+
+}
+
+
+/* IMPORT */
+
+function importBackup(event){
+
+  const file =
+    event.target.files[0];
+
+
+  if(!file)
+    return;
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload =
+    ()=>{
+
+      try{
+
+        const imported =
+          JSON.parse(
+            reader.result
+          );
+
+
+        if(
+          !Array.isArray(
+            imported
+          )
+        )
+          throw new Error();
+
+
+        if(
+          confirm(
+            "استعادة النسخة ستستبدل الملاحظات الحالية. هل تريد المتابعة؟"
+          )
+        ){
+
+          notes =
+            imported;
+
+
+          persist();
+
+
+          toast(
+            "✅ تمت استعادة النسخة"
+          );
+
+        }
+
+      }catch(e){
+
+        toast(
+          "❌ الملف غير صالح"
+        );
+
+      }
+
+    };
+
+
+  reader.readAsText(
+    file
+  );
+
+}
+
+
+/* =====================================================
+   REMINDERS
+===================================================== */
+
+let firedReminders =
+  {};
+
+
+/*
+  فحص التذكيرات عندما تكون
+  الصفحة مفتوحة.
+*/
+
+function checkReminders(){
+
+  const now =
+    Date.now();
+
+
+  notes.forEach(n=>{
+
+    if(!n.reminder)
+      return;
+
+
+    const time =
+      new Date(
+        n.reminder
+      ).getTime();
+
+
+    if(
+      !Number.isFinite(time)
+    )
+      return;
+
+
+    if(
+      time<=now &&
+      !firedReminders[n.id]
+    ){
+
+      firedReminders[n.id]=true;
+
+
+      showReminder(n);
+
+    }
+
+  });
+
+}
+
+
+/* SHOW REMINDER */
+
+async function showReminder(n){
+
+  /* Notification */
+
+  if(
+    "Notification" in window &&
+    Notification.permission===
+    "granted"
+  ){
+
+    try{
+
+      if(
+        "serviceWorker"
+        in navigator
+      ){
+
+        const reg =
+          await navigator
+            .serviceWorker
+            .ready;
+
+
+        await reg.showNotification(
+
+          "⏰ تذكير من ملاحظاتي",
+
+          {
+
+            body:
+              n.text,
+
+            icon:
+              "icon-192.png",
+
+            badge:
+              "icon-192.png",
+
+            tag:
+              "note-" + n.id,
+
+            vibrate:
+              [300,150,300],
+
+            requireInteraction:
+              true,
+
+            data:{
+              noteId:
+                n.id
+            }
+
+          }
+
+        );
+
+      }
+
+    }catch(e){
+
+      console.log(
+        "Notification error",
+        e
+      );
+
+    }
+
+  }
+
+
+  /*
+    النغمة المختارة تعمل عندما
+    يسمح المتصفح بالتشغيل.
+  */
+
+  if(n.soundData){
+
+    try{
+
+      const audio =
+        new Audio(
+          n.soundData
+        );
+
+
+      audio.volume=1;
+
+
+      await audio.play();
+
+
+    }catch(e){
+
+      /*
+       Android والمتصفح قد يمنعان
+       التشغيل التلقائي إذا لم يكن
+       هناك تفاعل مع الصفحة.
+      */
+
+      console.log(
+        "Audio autoplay blocked"
+      );
+
+    }
+
+  }
+
+
+  toast(
+    "⏰ حان موعد تذكير: "
+    +
+    n.text
+  );
+
+}
+
+
+/*
+  الفحص كل 5 ثوانٍ
+  أثناء فتح التطبيق.
+*/
+
+setInterval(
+  checkReminders,
+  5000
+);
+
+
+/* =====================================================
+   SERVICE WORKER
+===================================================== */
+
+async function registerSW(){
+
+  if(
+    !("serviceWorker" in navigator)
+  )
+    return;
+
+
+  try{
+
+    await navigator
+      .serviceWorker
+      .register(
+        "./sw.js",
+        {
+          scope:"./"
+        }
+      );
+
+
+    console.log(
+      "Service Worker registered"
+    );
+
+  }catch(e){
+
+    console.log(
+      "Service Worker error:",
+      e
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   VISIBILITY
+===================================================== */
+
+document.addEventListener(
+  "visibilitychange",
+  ()=>{
+
+    if(
+      !document.hidden
+    ){
+
+      checkReminders();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+createColors(
+  $("bgColors"),
+  BG_COLORS,
+  selectedBg,
+  c=>selectedBg=c
+);
+
+
+createColors(
+  $("textColors"),
+  TEXT_COLORS,
+  selectedText,
+  c=>selectedText=c
+);
+
+
+createColors(
+  $("reviewBgColors"),
+  BG_COLORS,
+  BG_COLORS[0],
+  c=>selectedBg=c
+);
+
+
+createColors(
+  $("reviewTextColors"),
+  TEXT_COLORS,
+  TEXT_COLORS[0],
+  c=>selectedText=c
+);
+
+
+render();
+
+registerSW();
+
+checkReminders();
+
 </script>
+
 </body>
 </html>
