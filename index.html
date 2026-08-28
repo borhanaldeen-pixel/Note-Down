@@ -3,174 +3,147 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#2a1520">
+<meta name="theme-color" content="#25121b">
 <meta name="description" content="ملاحظات ذكية ثلاثية الأبعاد بتذكير وتسجيل صوتي">
 <meta name="application-name" content="ملاحظاتي">
-<title>ملاحظاتي — بطاقات ثلاثية الأبعاد</title>
+<link rel="manifest" href="manifest.json">
+<title>ملاحظاتي الاحترافية</title>
 <style>
 :root{
-  --bg1: #25121b;
-  --bg2: #381b28;
-  --ink: #f4f2fb; 
-  --ink-dim: #cba8b9;
+  --bg-main: #f4f2fb;
   --panel: #311824;
-  --panel-2: #3d1e2d;
   --line: #52273a;
-  --accent-base: #ff477e;
+  --accent: #ff477e;
 }
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
-html,body{height:100%}
-body{
-  margin:0; font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;
-  color:var(--ink); min-height:100vh; overflow-x:hidden;
-  background:
-    radial-gradient(70% 50% at 15% 0%, rgba(255, 71, 126, 0.15) 0%, transparent 60%),
-    radial-gradient(60% 45% at 100% 15%, rgba(255, 183, 3, 0.12) 0%, transparent 55%),
-    radial-gradient(55% 50% at 90% 100%, rgba(155, 93, 229, 0.12) 0%, transparent 55%),
-    linear-gradient(170deg, var(--bg1) 0%, var(--bg2) 100%);
-  background-attachment:fixed;
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent; font-family:system-ui,sans-serif;}
+html,body{height:100%; margin:0; background:#25121b; color:#fff; overflow-x:hidden;}
+button,input,textarea,select{font:inherit; color:inherit;}
+
+/* Header & UI */
+.app{max-width:760px; margin:auto; padding:20px 15px 80px; position:relative;}
+.header{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;}
+.brand{background:var(--panel); padding:10px 20px; border-radius:20px; border:1px solid var(--line); font-weight:bold; font-size:18px;}
+.mic-btn{width:100%; padding:20px; border-radius:20px; border:none; background:linear-gradient(135deg,#ff477e,#9b5de5); color:#fff; font-size:18px; font-weight:bold; cursor:pointer; box-shadow:0 10px 20px rgba(255,71,126,0.3); transition:0.3s;}
+.mic-btn.rec{background:linear-gradient(135deg,#ff6b6b,#c92a2a); animation:pulse 1s infinite;}
+@keyframes pulse{50%{transform:scale(0.97);}}
+
+/* Controls */
+.controls{display:flex; gap:10px; margin:20px 0;}
+.controls button{flex:1; padding:12px; border-radius:15px; border:1px solid var(--line); background:var(--panel); font-weight:bold; cursor:pointer;}
+.searchbar{width:100%; padding:15px; border-radius:15px; border:1px solid var(--line); background:var(--panel); margin-bottom:20px; outline:none;}
+
+/* Grid & Note Cards */
+.grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:15px;}
+.note-card{
+  border-radius:20px; padding:20px; position:relative;
+  box-shadow:0 8px 16px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1);
+  display:flex; flex-direction:column; gap:12px; transition:0.2s;
 }
-button,input,textarea,select{font:inherit; color:inherit}
-.blob{position:fixed; border-radius:50%; filter:blur(60px); opacity:.3; z-index:0; pointer-events:none}
-.blob1{width:280px;height:280px;background:#ff477e;top:-80px;right:-60px;animation:float1 14s ease-in-out infinite}
-.blob2{width:220px;height:220px;background:#ffb703;bottom:10%;left:-70px;animation:float2 16s ease-in-out infinite}
-@media (prefers-reduced-motion: reduce){.blob{animation:none}}
-@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,30px)}}
-@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(25px,-25px)}}
+.note-card.pinned{border:2px solid #ffb703;}
+.note-header{display:flex; justify-content:space-between; font-size:12px; opacity:0.8;}
+.note-text{font-size:16px; line-height:1.6; white-space:pre-wrap; flex-grow:1;}
+.reminder-badge{background:rgba(0,0,0,0.3); padding:5px 10px; border-radius:10px; font-size:12px; display:inline-block; border:1px dashed currentcolor;}
+.actions{display:flex; gap:8px; justify-content:flex-end; border-top:1px solid rgba(0,0,0,0.1); padding-top:10px;}
+.actions button{background:rgba(0,0,0,0.2); border:none; width:35px; height:35px; border-radius:10px; cursor:pointer; display:flex; align-items:center; justify-content:center;}
 
-.app{max-width:760px;margin:auto;padding:18px 15px 60px;position:relative;z-index:1}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:10px}
-.brand{display:flex;align-items:center;gap:12px;background:linear-gradient(145deg,var(--panel),var(--panel-2));padding:12px 18px;border-radius:20px;box-shadow:6px 6px 0 rgba(0,0,0,0.15), 0 14px 30px rgba(0,0,0,0.25);border:1px solid var(--line)}
-.brand-emoji{font-size:26px}
-.brand b{font-size:20px;font-weight:900;display:block;letter-spacing:-.3px}
-.brand small{display:block;color:var(--ink-dim);font-size:11px;font-weight:700}
-.header-actions{display:flex;gap:8px}
-.icon-btn{width:46px;height:46px;border:0;border-radius:15px;background:linear-gradient(135deg,#ff477e,#9b5de5);color:#fff;font-size:20px;box-shadow:0 8px 18px rgba(255, 71, 126, 0.35);cursor:pointer}
-.icon-btn.ghost{background:linear-gradient(135deg,var(--panel-2),var(--panel));box-shadow:none;border:1px solid var(--line)}
-.icon-btn:active{transform:scale(0.94)}
+/* Modals */
+.modal{display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(5px); z-index:100; align-items:center; justify-content:center; padding:15px;}
+.modal.show{display:flex;}
+.box{background:var(--panel); width:100%; max-width:400px; padding:25px; border-radius:25px; border:1px solid var(--line); max-height:90vh; overflow-y:auto;}
+.box h3{margin-top:0;}
+.box label{display:block; margin:15px 0 5px; font-size:13px; color:#cba8b9;}
+.box input[type="text"], .box input[type="datetime-local"], .box textarea{width:100%; padding:12px; border-radius:10px; border:1px solid var(--line); background:#1a0d13; outline:none;}
+.colors{display:flex; gap:10px; margin-bottom:15px;}
+.colors input[type="color"]{width:40px; height:40px; border:none; border-radius:10px; cursor:pointer; background:none;}
+.btn-row{display:flex; gap:10px; margin-top:20px;}
+.btn-row button{flex:1; padding:12px; border-radius:12px; border:none; font-weight:bold; cursor:pointer;}
+.btn-primary{background:var(--accent); color:#fff;}
+.btn-secondary{background:#452232;}
 
-.hero{background:linear-gradient(135deg,#671b39,#a82b49);border-radius:26px;padding:24px;box-shadow:8px 8px 0 rgba(0,0,0,0.2), 0 20px 45px rgba(103, 27, 57, 0.4);margin-bottom:20px;position:relative;overflow:hidden}
-.hero h1{margin:0 0 5px;font-size:23px;font-weight:900}
-.hero p{margin:0;opacity:.9;font-size:12.5px;line-height:1.6}
-.mic-btn{width:100%;margin-top:18px;border:0;border-radius:20px;padding:20px 14px;background:#fff;color:#671b39;font-weight:900;font-size:18px;box-shadow:0 12px 25px rgba(0,0,0,0.25);cursor:pointer;position:relative;transition:.25s}
-.mic-btn small{display:block;font-size:11.5px;color:#8a5a6b;margin-top:4px;font-weight:700}
-.mic-btn.rec{background:linear-gradient(135deg,#ff6b6b,#c92a2a);color:#fff;animation:pulse 1.1s infinite}
-.mic-btn.rec small{color:#ffe3e3}
-@keyframes pulse{50%{transform:scale(.98); box-shadow:0 8px 20px rgba(255,60,60,.5)}}
+/* Voice Wave */
+.waves{display:flex; justify-content:center; gap:5px; height:50px; align-items:center;}
+.waves span{width:6px; background:var(--accent); border-radius:3px; animation:wave 1s infinite ease-in-out;}
+.waves span:nth-child(2){animation-delay:0.1s; background:#ffb703;}
+.waves span:nth-child(3){animation-delay:0.2s; background:#06d6a0;}
+.waves span:nth-child(4){animation-delay:0.3s; background:#00b4d8;}
+@keyframes wave{0%,100%{height:10px;} 50%{height:40px;}}
 
-.quick{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
-.quick button{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:14px;box-shadow:5px 5px 0 rgba(0,0,0,0.15);cursor:pointer;font-weight:800;color:var(--ink)}
-.quick button:active{transform:translateY(2px)}
-
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
-.stat{padding:14px;border-radius:16px;background:var(--panel);border:1px solid var(--line);text-align:center;box-shadow:4px 4px 0 rgba(0,0,0,0.1)}
-.stat span{font-size:10.5px;color:var(--ink-dim);font-weight:700;display:block}
-.stat b{display:block;font-size:18px;margin-top:4px}
-
-.searchbar{width:100%;padding:13px 16px;border-radius:16px;border:1px solid var(--line);background:var(--panel);outline:0;margin-bottom:18px;font-weight:600;box-shadow:4px 4px 0 rgba(0,0,0,0.1)}
-.searchbar::placeholder{color:var(--ink-dim)}
-.searchbar:focus{border-color:#ff477e}
-
-.grid{display:grid;grid-template-columns:1fr;gap:26px}
-@media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
-
-.note-wrap{position:relative; perspective:700px; touch-action:pan-y}
-.note-shadow{position:absolute; inset:0; background:var(--accent); border-radius:22px; transform:translate(9px, 10px) rotate(var(--tilt,-1.2deg)); z-index:0}
-.note-card{position:relative; z-index:1; background:#1b0d14; border-radius:22px; padding:16px 16px 14px; border:1px solid rgba(255,255,255,0.08); transform:rotate(var(--tilt,-1.2deg)); box-shadow:0 4px 0 rgba(0,0,0,0.25), 0 18px 30px -8px rgba(0,0,0,.55), 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent); transition:transform .12s ease-out; cursor:grab;}
-.note-card.pinned{outline:2px solid var(--accent)}
-.note-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.dot{width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);flex-shrink:0}
-.time{font-size:11px;color:var(--ink-dim);font-weight:700;}
-.pin-flag{margin-right:auto;font-size:14px}
-.note-text{margin:0 0 12px;font-size:15px;line-height:1.85;font-weight:600;white-space:pre-wrap;word-break:break-word}
-.voice-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--accent);font-weight:800;margin-bottom:8px}
-.reminder-chip{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800;background:rgba(255,255,255,0.05);border:1px dashed var(--accent);border-radius:12px;padding:7px 10px;margin-bottom:10px;justify-content:center}
-.note-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:8px}
-.note-actions button{border:0;background:rgba(255,255,255,0.08);color:var(--ink);width:36px;height:36px;border-radius:11px;font-size:15px;cursor:pointer}
-.color-row{display:flex;gap:7px;margin-top:10px;margin-bottom:10px;flex-wrap:wrap}
-.color-row span{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent}
-.color-row span.sel{border-color:#fff}
-.empty{grid-column:1/-1;text-align:center;color:var(--ink-dim);padding:50px 20px;font-weight:700}
-.empty b{display:block;font-size:34px;margin-bottom:8px}
-
-.modal{display:none;position:fixed;inset:0;background:rgba(20, 10, 15, 0.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:18px;z-index:20}
-.modal.show{display:flex}
-.box{background:var(--panel);border:1px solid var(--line);border-radius:26px;padding:22px;width:100%;max-width:460px;max-height:88vh;overflow:auto;box-shadow:0 30px 60px rgba(0,0,0,.5)}
-.box h2{margin:0 0 16px;font-size:18px;font-weight:900}
-.box label{font-size:12px;color:var(--ink-dim);font-weight:800;display:block;margin:12px 0 6px}
-.box textarea,.box input,.box select{width:100%;padding:13px;border:2px solid var(--line);border-radius:14px;outline:0;background:#25121b;color:var(--ink);font-weight:600;resize:vertical}
-.row{display:flex;gap:10px;margin-top:18px}
-.row button{flex:1;border:0;padding:13px;border-radius:14px;font-weight:800;cursor:pointer}
-.primary{background:linear-gradient(135deg,#ff477e,#9b5de5);color:#fff;}
-.secondary{background:#452232;color:var(--ink)}
-.danger-btn{background:linear-gradient(135deg,#ff6b6b,#c92a2a);color:#fff}
-.full-btn{width:100%;border:0;padding:13px;border-radius:14px;font-weight:800;cursor:pointer;margin-top:6px}
-.voice-box{text-align:center}
-.listening-waves{display:flex;justify-content:center;align-items:center;gap:6px;height:70px;margin-bottom:10px;background:#1a0d13;border-radius:14px;border:1px solid var(--line)}
-.listening-waves span{width:8px;height:12px;border-radius:4px;animation:wave-anim 1.2s ease-in-out infinite}
-.listening-waves span:nth-child(1){background:#ff477e;animation-delay:0.0s}
-.listening-waves span:nth-child(2){background:#ffb703;animation-delay:0.1s}
-.listening-waves span:nth-child(3){background:#06d6a0;animation-delay:0.2s}
-.listening-waves span:nth-child(4){background:#9b5de5;animation-delay:0.3s}
-.listening-waves span:nth-child(5){background:#00b4d8;animation-delay:0.4s}
-@keyframes wave-anim{0%,100%{height:12px}50%{height:45px}}
-.live-text{min-height:44px;font-weight:700;color:var(--ink-dim);font-size:13.5px}
-.rec-timer{font-size:22px;font-weight:900;margin:6px 0;color:#ff477e}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#452232;border:1px solid var(--line);color:#fff;padding:13px 20px;border-radius:16px;display:none;z-index:40;font-size:13px;font-weight:700;}
+.toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#452232; padding:12px 20px; border-radius:20px; font-size:14px; z-index:200; display:none; box-shadow:0 10px 20px rgba(0,0,0,0.5);}
 </style>
 </head>
 <body>
-<div class="blob blob1"></div><div class="blob blob2"></div>
+
 <div class="app">
-  <header class="header">
-    <div class="brand"><span class="brand-emoji">🗒️</span><div><b>ملاحظاتي</b></div></div>
-    <div class="header-actions">
-      <button class="icon-btn" onclick="openComposer()">＋</button>
-    </div>
-  </header>
+  <div class="header">
+    <div class="brand">🗒️ ملاحظاتي (نسخة الأوفلاين)</div>
+    <button class="actions button" onclick="openSettings()" style="background:var(--panel); padding:10px 15px; border-radius:15px; border:1px solid var(--line);">⚙️ الإعدادات</button>
+  </div>
 
-  <section class="hero">
-    <h1>سجّل فكرتك بصوتك</h1>
-    <button id="micBtn" class="mic-btn" onclick="toggleVoiceNote()">🎙️ ملاحظة صوتية جديدة</button>
-  </section>
+  <button id="micBtn" class="mic-btn" onclick="toggleVoiceNote()">🎙️ اضغط للتحدث (ملاحظة صوتية)</button>
+  
+  <div class="controls">
+    <button onclick="openComposer()">✍️ ملاحظة نصية جديدة</button>
+    <button onclick="requestNotificationPermission()">🔔 تفعيل التنبيهات</button>
+  </div>
 
-  <input class="searchbar" id="search" placeholder="ابحث في ملاحظاتك..." oninput="render()">
+  <input type="text" id="search" class="searchbar" placeholder="ابحث في ملاحظاتك..." oninput="renderNotes()">
+
   <div class="grid" id="grid"></div>
 </div>
 
+<!-- Composer Modal -->
 <div class="modal" id="composerModal">
   <div class="box">
-    <h2 id="composerTitle">✍️ ملاحظة جديدة</h2>
-    <textarea id="composerText" rows="4" placeholder="اكتب هنا..."></textarea>
-    <div class="color-row" id="composerColors"></div>
-    <div class="row">
-      <button class="primary" onclick="saveComposer()">حفظ</button>
-      <button class="secondary" onclick="closeComposer()">إلغاء</button>
+    <h3 id="modalTitle">إضافة ملاحظة</h3>
+    <label>نص الملاحظة</label>
+    <textarea id="noteText" rows="4"></textarea>
+    
+    <div style="display:flex; gap:20px;">
+      <div style="flex:1;">
+        <label>لون الخلفية</label>
+        <input type="color" id="bgColor" value="#311824">
+      </div>
+      <div style="flex:1;">
+        <label>لون الخط</label>
+        <input type="color" id="textColor" value="#ffffff">
+      </div>
+    </div>
+
+    <label>تنبيه في وقت محدد (تذكير)</label>
+    <input type="datetime-local" id="noteReminder">
+
+    <div class="btn-row">
+      <button class="btn-primary" onclick="saveNote()">حفظ</button>
+      <button class="btn-secondary" onclick="closeModals()">إلغاء</button>
     </div>
   </div>
 </div>
 
-<div class="modal" id="voiceModal">
-  <div class="box voice-box">
-    <h2>🎙️ يستمع الآن...</h2>
-    <div class="listening-waves"><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="rec-timer" id="recTimer">00:00</div>
-    <p class="live-text" id="liveText">جاري الاتصال بالميكروفون...</p>
-    <div class="row">
-      <button class="danger-btn" onclick="stopVoiceNote()">⏹ إيقاف وحفظ</button>
-      <button class="secondary" onclick="cancelVoiceNote()">إلغاء</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="reviewModal">
+<!-- Settings Modal (Custom Ringtone) -->
+<div class="modal" id="settingsModal">
   <div class="box">
-    <h2>✅ راجع النص المستخرج</h2>
-    <textarea id="reviewText" rows="4"></textarea>
-    <div class="color-row" id="reviewColors"></div>
-    <div class="row">
-      <button class="primary" onclick="saveReview()">حفظ الملاحظة</button>
-      <button class="secondary" onclick="discardReview()">إلغاء</button>
+    <h3>⚙️ إعدادات التنبيهات</h3>
+    <p style="font-size:12px; color:#cba8b9;">اختر نغمة مخصصة من جهازك لتعمل وقت التذكير (سيتم حفظها محلياً).</p>
+    
+    <label>رفع نغمة (ملف صوتي):</label>
+    <input type="file" id="audioUpload" accept="audio/*" style="font-size:13px;">
+    
+    <button onclick="testCustomAudio()" style="margin-top:10px; width:100%; padding:10px; border-radius:10px; background:#452232; border:none; cursor:pointer;">▶️ تجربة النغمة المحفوظة</button>
+
+    <div class="btn-row">
+      <button class="btn-primary" onclick="closeModals()">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- Voice Modal -->
+<div class="modal" id="voiceModal">
+  <div class="box" style="text-align:center;">
+    <h3>🎙️ جاري الاستماع...</h3>
+    <div class="waves"><span></span><span></span><span></span><span></span></div>
+    <p id="liveText" style="margin:20px 0; color:#cba8b9;">تحدث الآن باللغة العربية...</p>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="stopVoiceNote()" style="background:#c92a2a;">⏹ إيقاف وحفظ</button>
     </div>
   </div>
 </div>
@@ -178,188 +151,337 @@ button,input,textarea,select{font:inherit; color:inherit}
 <div class="toast" id="toast"></div>
 
 <script>
-const KEY='brilliantNotesV5'; 
-const ACCENTS=['#ff477e','#ffb703','#06d6a0','#9b5de5','#00b4d8','#f15bb5']; 
-let notes=JSON.parse(localStorage.getItem(KEY)||'[]');
-const $=id=>document.getElementById(id);
-const toast=t=>{$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2600)};
-const save=()=>{localStorage.setItem(KEY,JSON.stringify(notes));render();};
-const uid=()=>Date.now().toString();
-function fmtTime(iso){const d=new Date(iso);return d.getDate()+'/'+(d.getMonth()+1)+' • '+d.getHours()+':'+d.getMinutes()}
-function nextAccent(){return ACCENTS[notes.length%ACCENTS.length]}
-function buildColorRow(container,selected,onPick){
-  container.innerHTML='';
-  ACCENTS.forEach(c=>{
-    const s=document.createElement('span');
-    s.style.background=c; if(c===selected)s.className='sel';
-    s.onclick=()=>{[...container.children].forEach(x=>x.classList.remove('sel'));s.classList.add('sel');onPick(c)};
-    container.appendChild(s);
-  });
+/* -------------------------------------------------------------------------- */
+/* قاعدة البيانات المحلية القوية (IndexedDB) للعمل بدون إنترنت وتخزين النغمات */
+/* -------------------------------------------------------------------------- */
+const DB_NAME = 'NotesOfflineDB';
+let db;
+
+function initDB() {
+    const request = indexedDB.open(DB_NAME, 2);
+    request.onupgradeneeded = (e) => {
+        db = e.target.result;
+        if (!db.objectStoreNames.contains('notes')) db.createObjectStore('notes', { keyPath: 'id' });
+        if (!db.objectStoreNames.contains('settings')) db.createObjectStore('settings', { keyPath: 'key' });
+    };
+    request.onsuccess = (e) => { 
+        db = e.target.result; 
+        renderNotes(); 
+        startReminderChecker(); // تشغيل فاحص التنبيهات
+    };
+}
+initDB();
+
+const toast = (msg) => {
+    document.getElementById('toast').textContent = msg;
+    document.getElementById('toast').style.display = 'block';
+    setTimeout(() => document.getElementById('toast').style.display = 'none', 3000);
+};
+
+/* -------------------------------------------------------------------------- */
+/* إدارة الملاحظات (إضافة، تعديل، حذف، تثبيت) */
+/* -------------------------------------------------------------------------- */
+let editingId = null;
+
+function openComposer(note = null) {
+    if (note && note.id) {
+        editingId = note.id;
+        document.getElementById('modalTitle').textContent = 'تعديل الملاحظة';
+        document.getElementById('noteText').value = note.text;
+        document.getElementById('bgColor').value = note.bgColor || '#311824';
+        document.getElementById('textColor').value = note.textColor || '#ffffff';
+        document.getElementById('noteReminder').value = note.reminderAt || '';
+    } else {
+        editingId = null;
+        document.getElementById('modalTitle').textContent = 'ملاحظة جديدة';
+        document.getElementById('noteText').value = '';
+        document.getElementById('bgColor').value = '#311824';
+        document.getElementById('textColor').value = '#ffffff';
+        document.getElementById('noteReminder').value = '';
+    }
+    document.getElementById('composerModal').classList.add('show');
 }
 
-function render(){
-  const q=$('search').value.trim().toLowerCase();
-  const arr=notes.filter(n=>n.text.toLowerCase().includes(q)).sort((a,b)=>(b.pinned-a.pinned)||(new Date(b.createdAt)-new Date(a.createdAt)));
-  $('grid').innerHTML=arr.length?arr.map(n=>{
-    return `<div class="note-wrap" style="--accent:${n.color};--tilt:0deg" data-id="${n.id}">
-      <div class="note-card ${n.pinned?'pinned':''}">
-        <div class="note-top"><span class="dot"></span><span class="time">${fmtTime(n.createdAt)}</span></div>
-        <p class="note-text">${n.text}</p>
-        <div class="note-actions">
-          <button class="danger" onclick="deleteNote('${n.id}')">🗑️</button>
-        </div>
-      </div>
-    </div>`;
-  }).join(''):'<div class="empty">لا توجد ملاحظات</div>';
+function closeModals() {
+    document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
 }
 
-let composerColor=null;
-function openComposer(){
-  $('composerText').value=''; composerColor=nextAccent();
-  buildColorRow($('composerColors'),composerColor,c=>composerColor=c);
-  $('composerModal').classList.add('show'); $('composerText').focus();
-}
-function closeComposer(){$('composerModal').classList.remove('show')}
-function saveComposer(){
-  const text=$('composerText').value.trim();
-  if(!text)return toast('اكتب نص الملاحظة');
-  notes.unshift({id:uid(),text,color:composerColor,createdAt:new Date().toISOString(),pinned:false});
-  save(); closeComposer(); toast('تم الحفظ');
-}
-function deleteNote(id){
-  notes=notes.filter(x=>x.id!==id); save(); toast('تم الحذف');
+function saveNote() {
+    const text = document.getElementById('noteText').value.trim();
+    if (!text) return toast('اكتب شيئاً!');
+
+    const note = {
+        id: editingId || Date.now().toString(),
+        text: text,
+        bgColor: document.getElementById('bgColor').value,
+        textColor: document.getElementById('textColor').value,
+        reminderAt: document.getElementById('noteReminder').value,
+        pinned: editingId ? undefined : false, // Preserve pin state if editing
+        reminded: false
+    };
+
+    if (editingId) {
+        // Fetch old note to keep its pinned state and creation date
+        const tx = db.transaction('notes', 'readonly');
+        const req = tx.objectStore('notes').get(editingId);
+        req.onsuccess = () => {
+            const oldNote = req.result;
+            note.pinned = oldNote.pinned;
+            note.createdAt = oldNote.createdAt;
+            saveToDB(note);
+        }
+    } else {
+        note.createdAt = new Date().toISOString();
+        saveToDB(note);
+    }
 }
 
-/* ---------------------------------------------------- */
-/* النظام المعدل والمحسن بالكامل للتعرف على الصوت (العربية) */
-/* ---------------------------------------------------- */
-let recognition = null;
-let recognitionShouldRun = false;
-let recStartTime = 0, recTimerHandle = null, liveTranscript = '';
+function saveToDB(note) {
+    const tx = db.transaction('notes', 'readwrite');
+    tx.objectStore('notes').put(note);
+    tx.oncomplete = () => {
+        closeModals();
+        renderNotes();
+        scheduleBackgroundNotification(note); // جدولة إشعار الخلفية
+        toast('تم الحفظ بنجاح');
+    };
+}
+
+function deleteNote(id) {
+    if(!confirm('حذف الملاحظة؟')) return;
+    const tx = db.transaction('notes', 'readwrite');
+    tx.objectStore('notes').delete(id);
+    tx.oncomplete = () => { renderNotes(); toast('تم الحذف'); };
+}
+
+function togglePin(id) {
+    const tx = db.transaction('notes', 'readwrite');
+    const store = tx.objectStore('notes');
+    store.get(id).onsuccess = (e) => {
+        const note = e.target.result;
+        note.pinned = !note.pinned;
+        store.put(note).onsuccess = () => renderNotes();
+    };
+}
+
+function renderNotes() {
+    const q = document.getElementById('search').value.trim().toLowerCase();
+    const tx = db.transaction('notes', 'readonly');
+    const req = tx.objectStore('notes').getAll();
+    req.onsuccess = () => {
+        let notes = req.result;
+        notes = notes.filter(n => n.text.toLowerCase().includes(q));
+        notes.sort((a,b) => (b.pinned - a.pinned) || (new Date(b.createdAt) - new Date(a.createdAt)));
+        
+        const grid = document.getElementById('grid');
+        grid.innerHTML = notes.map(n => `
+            <div class="note-card ${n.pinned ? 'pinned' : ''}" style="background:${n.bgColor}; color:${n.textColor}">
+                <div class="note-header">
+                    <span>${new Date(n.createdAt).toLocaleDateString()}</span>
+                    ${n.pinned ? '📌' : ''}
+                </div>
+                <div class="note-text">${n.text}</div>
+                ${n.reminderAt ? `<div class="reminder-badge">⏰ ${new Date(n.reminderAt).toLocaleString()}</div>` : ''}
+                
+                <div class="actions">
+                    <button onclick='speakText(\`${n.text}\`)' title="قراءة">🔊</button>
+                    <button onclick='copyText(\`${n.text}\`)' title="نسخ">📋</button>
+                    <button onclick="togglePin('${n.id}')" title="تثبيت">📌</button>
+                    <button onclick='openComposer(${JSON.stringify(n)})' title="تعديل">✏️</button>
+                    <button onclick="deleteNote('${n.id}')" title="حذف" style="background:rgba(200,0,0,0.3)">🗑️</button>
+                </div>
+            </div>
+        `).join('') || '<div style="text-align:center; color:#888; grid-column:1/-1;">لا توجد ملاحظات</div>';
+    };
+}
+
+function copyText(text) {
+    navigator.clipboard.writeText(text);
+    toast('تم النسخ للحافظة');
+}
+
+/* -------------------------------------------------------------------------- */
+/* النغمات المخصصة من الجهاز وحفظها في IndexedDB */
+/* -------------------------------------------------------------------------- */
+function openSettings() { document.getElementById('settingsModal').classList.add('show'); }
+
+document.getElementById('audioUpload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const base64Audio = event.target.result;
+        const tx = db.transaction('settings', 'readwrite');
+        tx.objectStore('settings').put({ key: 'customRingtone', data: base64Audio });
+        tx.oncomplete = () => toast('✅ تم حفظ النغمة المخصصة بنجاح!');
+    };
+    reader.readAsDataURL(file); // تحويل الملف الصوتي لنص لحفظه محلياً
+});
+
+function testCustomAudio() { playAlarm(); }
+
+function playAlarm() {
+    const tx = db.transaction('settings', 'readonly');
+    const req = tx.objectStore('settings').get('customRingtone');
+    req.onsuccess = () => {
+        if (req.result && req.result.data) {
+            // تشغيل النغمة المحفوظة
+            const audio = new Audio(req.result.data);
+            audio.play().catch(e => toast('يجب التفاعل مع الشاشة لتشغيل الصوت'));
+        } else {
+            // تشغيل نغمة افتراضية إذا لم يقم برفع نغمة
+            playFallbackBeep();
+        }
+    };
+}
+
+function playFallbackBeep() {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    o.type = 'square'; o.frequency.value = 880;
+    o.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + 0.5);
+}
+
+/* -------------------------------------------------------------------------- */
+/* نظام التنبيهات (والتطبيق مفتوح + والتطبيق مغلق عبر Notification Trigger) */
+/* -------------------------------------------------------------------------- */
+async function requestNotificationPermission() {
+    if ('Notification' in window) {
+        const perm = await Notification.requestPermission();
+        if (perm === 'granted') toast('تم تفعيل التنبيهات بنجاح');
+        else toast('تم رفض التنبيهات من المتصفح');
+    }
+}
+
+// 1. التنبيه العادي: يفحص الوقت كل 10 ثوانٍ (يعمل والتطبيق مفتوح)
+function startReminderChecker() {
+    setInterval(() => {
+        const now = new Date().getTime();
+        const tx = db.transaction('notes', 'readwrite');
+        const store = tx.objectStore('notes');
+        store.getAll().onsuccess = (e) => {
+            const notes = e.target.result;
+            notes.forEach(note => {
+                if (note.reminderAt && !note.reminded) {
+                    const remTime = new Date(note.reminderAt).getTime();
+                    if (now >= remTime) {
+                        playAlarm();
+                        if(Notification.permission === 'granted') {
+                            new Notification('⏰ تذكير بملاحظتك', { body: note.text });
+                        }
+                        note.reminded = true;
+                        store.put(note);
+                        toast('⏰ تذكير: ' + note.text);
+                    }
+                }
+            });
+        };
+    }, 10000);
+}
+
+// 2. التنبيه المتقدم PWA: جدولة الإشعار ليظهر حتى لو تم إغلاق التطبيق (للأندرويد)
+async function scheduleBackgroundNotification(note) {
+    if (!note.reminderAt || Notification.permission !== 'granted') return;
+    const remTime = new Date(note.reminderAt).getTime();
+    if (remTime <= Date.now()) return;
+
+    if ('serviceWorker' in navigator) {
+        const reg = await navigator.serviceWorker.ready;
+        // تقنية Notification Triggers الحديثة (تضمن ظهور الإشعار بدون سيرفر)
+        if ('showTrigger' in Notification.prototype) {
+            reg.showNotification('⏰ تذكير (ملاحظاتي)', {
+                body: note.text,
+                showTrigger: new TimestampTrigger(remTime),
+                tag: 'rem-' + note.id
+            }).catch(e => console.log('Trigger failed', e));
+        }
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* تحويل الصوت إلى نص (العربية) - معالجة الأخطاء الذكية */
+/* -------------------------------------------------------------------------- */
+let recognition = null, recActive = false, liveTranscript = '';
 
 function toggleVoiceNote() {
-  if (recognitionShouldRun) { stopVoiceNote(); return; }
-  startVoiceNote();
-}
-
-function startVoiceNote() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  
-  if (!SR) {
-    alert('متصفحك لا يدعم هذه الميزة. يرجى فتح النظام باستخدام متصفح جوجل كروم (Google Chrome).');
-    return;
-  }
-  
-  if (window.location.protocol === 'file:') {
-    alert('تنبيه هام: الميكروفون لا يعمل إذا تم فتح الملف محلياً (file://). يجب رفعه على استضافة أو تشغيله عبر Localhost.');
-  }
-
-  liveTranscript = '';
-  recognitionShouldRun = true;
-  recStartTime = Date.now();
-  
-  $('micBtn').classList.add('rec'); 
-  $('micBtn').innerHTML = '⏹️ إيقاف التسجيل';
-  $('voiceModal').classList.add('show'); 
-  $('liveText').textContent = 'يتم الآن تهيئة الميكروفون...'; 
-  $('recTimer').textContent = '00:00';
-  
-  recTimerHandle = setInterval(() => {
-    const s = Math.floor((Date.now() - recStartTime) / 1000);
-    $('recTimer').textContent = String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
-  }, 1000);
-  
-  recognition = new SR();
-  recognition.lang = 'ar-SA'; // اللغة العربية الافتراضية للتعرف الصوتي
-  
-  // حيلة لتجاوز مشاكل الأندرويد: جعل الاستمرار false وإعادة التشغيل عند التوقف
-  recognition.continuous = false; 
-  recognition.interimResults = true;
-  
-  recognition.onstart = () => {
-    $('liveText').textContent = 'تحدث الآن (بالعربية)...';
-  };
-
-  recognition.onresult = e => {
-    let interim = '';
-    let finalChunk = '';
+    if(recActive) { stopVoiceNote(); return; }
     
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) finalChunk += e.results[i][0].transcript + ' ';
-      else interim += e.results[i][0].transcript;
-    }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SR) return alert('عذراً، متصفحك لا يدعم التعرف على الصوت. استخدم جوجل كروم.');
+    if(window.location.protocol === 'file:') return alert('عذراً، الميكروفون لا يعمل عند فتح الملف محلياً، يجب رفعه على استضافة.');
+
+    liveTranscript = '';
+    recActive = true;
+    document.getElementById('voiceModal').classList.add('show');
+    document.getElementById('liveText').textContent = 'تحدث الآن...';
     
-    if (finalChunk) liveTranscript += finalChunk;
-    $('liveText').textContent = (liveTranscript + interim) || 'استمر في التحدث...';
-  };
-  
-  recognition.onerror = e => {
-    const msgs = {
-      'not-allowed': 'تم رفض إذن الميكروفون. يجب السماح به من الإعدادات.',
-      'audio-capture': 'الميكروفون محجوز لتطبيق آخر.',
-      'network': 'لا يوجد اتصال بالإنترنت (مطلوب لتحويل الصوت).',
-      'no-speech': 'توقف عن التحدث أو الصوت غير واضح.'
+    recognition = new SR();
+    recognition.lang = 'ar-SA';
+    recognition.continuous = false; // نتجنب الانهيار في الجوال بتشغيله كدفعات
+    recognition.interimResults = true;
+
+    recognition.onresult = (e) => {
+        let interim = '', final = '';
+        for(let i = e.resultIndex; i < e.results.length; i++){
+            if(e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+            else interim += e.results[i][0].transcript;
+        }
+        if(final) liveTranscript += final;
+        document.getElementById('liveText').textContent = liveTranscript + interim;
     };
-    
-    if (msgs[e.error]) $('liveText').textContent = msgs[e.error];
-    
-    // إيقاف المحاولة في الأخطاء التي تمنع التشغيل نهائياً
-    if (e.error === 'not-allowed' || e.error === 'audio-capture') {
-        recognitionShouldRun = false;
-    }
-  };
-  
-  recognition.onend = () => {
-    // إذا توقف النظام لوحده (بسبب انتهاء الجملة)، نعيد تشغيله طالما لم يضغط المستخدم "إيقاف"
-    if (recognitionShouldRun) { 
-      setTimeout(() => {
-          if (recognitionShouldRun) {
-              try { recognition.start(); } catch(err) {} 
-          }
-      }, 300);
-    }
-  };
-  
-  try { recognition.start(); } catch(e) {}
+
+    recognition.onerror = (e) => {
+        if(e.error === 'network') document.getElementById('liveText').textContent = '⚠️ تحويل الصوت للنص تحديداً يتطلب إنترنت / VPN (بسبب حجب خدمات جوجل).';
+        else document.getElementById('liveText').textContent = 'حدث خطأ: ' + e.error;
+    };
+
+    recognition.onend = () => {
+        if(recActive) { try{ recognition.start(); }catch(e){} }
+    };
+
+    try{ recognition.start(); }catch(e){}
 }
 
 function stopVoiceNote() {
-  recognitionShouldRun = false;
-  clearInterval(recTimerHandle);
-  if (recognition) { try { recognition.abort(); } catch(e) {} }
-  
-  $('voiceModal').classList.remove('show');
-  $('micBtn').classList.remove('rec'); 
-  $('micBtn').innerHTML = '🎙️ ملاحظة صوتية جديدة';
-  openReview();
+    recActive = false;
+    if(recognition) { try{ recognition.abort(); }catch(e){} }
+    document.getElementById('voiceModal').classList.remove('show');
+    
+    if(liveTranscript.trim()) {
+        document.getElementById('noteText').value = liveTranscript.trim();
+        openComposer(); // فتح المحرر ليراجعها ويختار الألوان ويحفظها
+    }
 }
 
-function cancelVoiceNote() {
-  recognitionShouldRun = false;
-  clearInterval(recTimerHandle);
-  if (recognition) { try { recognition.abort(); } catch(e) {} }
-  
-  $('voiceModal').classList.remove('show');
-  $('micBtn').classList.remove('rec'); 
-  $('micBtn').innerHTML = '🎙️ ملاحظة صوتية جديدة';
+function speakText(txt) {
+    if(!('speechSynthesis' in window)) return toast('جهازك لا يدعم القراءة الصوتية');
+    const u = new SpeechSynthesisUtterance(txt);
+    u.lang = 'ar-SA';
+    speechSynthesis.speak(u);
 }
 
-let reviewColor=null;
-function openReview(){
-  $('reviewText').value = liveTranscript.trim();
-  reviewColor = nextAccent();
-  buildColorRow($('reviewColors'), reviewColor, c=>reviewColor=c);
-  $('reviewModal').classList.add('show');
+/* -------------------------------------------------------------------------- */
+/* تسجيل Service Worker المدمج ليجعل التطبيق يعمل Offline بالكامل */
+/* -------------------------------------------------------------------------- */
+if ('serviceWorker' in navigator) {
+    // الكود الآتي يقوم بعمل Service Worker داخلي يحفظ الصفحة للعمل بدون إنترنت
+    const swCode = `
+        const CACHE = 'notes-offline-v1';
+        self.addEventListener('install', e => {
+            self.skipWaiting();
+            e.waitUntil(caches.open(CACHE).then(c => c.addAll([location.href])));
+        });
+        self.addEventListener('fetch', e => {
+            e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
+        });
+    `;
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swUrl).then(() => {
+        console.log('✅ تطبيقك الآن جاهز للعمل بدون إنترنت (Offline)');
+    }).catch(e => console.log('SW Reg failed:', e));
 }
-function saveReview(){
-  const text=$('reviewText').value.trim();
-  if(!text){ toast('لا يوجد نص لحفظه!'); return; }
-  notes.unshift({ id:uid(), text:text, color:reviewColor, createdAt:new Date().toISOString(), pinned:false });
-  save(); $('reviewModal').classList.remove('show'); toast('تم حفظ الملاحظة');
-}
-function discardReview(){ $('reviewModal').classList.remove('show'); }
-
-render();
 </script>
 </body>
 </html>
