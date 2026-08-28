@@ -119,7 +119,7 @@ button,input,textarea,select{font:inherit; color:inherit;}
   </div>
 </div>
 
-<!-- Settings Modal (Custom Ringtone) -->
+<!-- Settings Modal -->
 <div class="modal" id="settingsModal">
   <div class="box">
     <h3>⚙️ إعدادات التنبيهات</h3>
@@ -152,7 +152,7 @@ button,input,textarea,select{font:inherit; color:inherit;}
 
 <script>
 /* -------------------------------------------------------------------------- */
-/* قاعدة البيانات المحلية القوية (IndexedDB) للعمل بدون إنترنت وتخزين النغمات */
+/* 1. قاعدة البيانات المحلية (IndexedDB) */
 /* -------------------------------------------------------------------------- */
 const DB_NAME = 'NotesOfflineDB';
 let db;
@@ -167,7 +167,7 @@ function initDB() {
     request.onsuccess = (e) => { 
         db = e.target.result; 
         renderNotes(); 
-        startReminderChecker(); // تشغيل فاحص التنبيهات
+        startReminderChecker();
     };
 }
 initDB();
@@ -179,7 +179,7 @@ const toast = (msg) => {
 };
 
 /* -------------------------------------------------------------------------- */
-/* إدارة الملاحظات (إضافة، تعديل، حذف، تثبيت) */
+/* 2. إدارة الملاحظات */
 /* -------------------------------------------------------------------------- */
 let editingId = null;
 
@@ -194,7 +194,10 @@ function openComposer(note = null) {
     } else {
         editingId = null;
         document.getElementById('modalTitle').textContent = 'ملاحظة جديدة';
-        document.getElementById('noteText').value = '';
+        // لا نفرغ النص إذا كان قادماً من التسجيل الصوتي وتم وضعه مسبقاً
+        if(!document.getElementById('noteText').value) {
+            document.getElementById('noteText').value = '';
+        }
         document.getElementById('bgColor').value = '#311824';
         document.getElementById('textColor').value = '#ffffff';
         document.getElementById('noteReminder').value = '';
@@ -204,6 +207,7 @@ function openComposer(note = null) {
 
 function closeModals() {
     document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
+    document.getElementById('noteText').value = ''; // تفريغ بعد الإلغاء
 }
 
 function saveNote() {
@@ -216,12 +220,11 @@ function saveNote() {
         bgColor: document.getElementById('bgColor').value,
         textColor: document.getElementById('textColor').value,
         reminderAt: document.getElementById('noteReminder').value,
-        pinned: editingId ? undefined : false, // Preserve pin state if editing
+        pinned: editingId ? undefined : false,
         reminded: false
     };
 
     if (editingId) {
-        // Fetch old note to keep its pinned state and creation date
         const tx = db.transaction('notes', 'readonly');
         const req = tx.objectStore('notes').get(editingId);
         req.onsuccess = () => {
@@ -242,7 +245,7 @@ function saveToDB(note) {
     tx.oncomplete = () => {
         closeModals();
         renderNotes();
-        scheduleBackgroundNotification(note); // جدولة إشعار الخلفية
+        scheduleBackgroundNotification(note);
         toast('تم الحفظ بنجاح');
     };
 }
@@ -287,7 +290,7 @@ function renderNotes() {
                     <button onclick='speakText(\`${n.text}\`)' title="قراءة">🔊</button>
                     <button onclick='copyText(\`${n.text}\`)' title="نسخ">📋</button>
                     <button onclick="togglePin('${n.id}')" title="تثبيت">📌</button>
-                    <button onclick='openComposer(${JSON.stringify(n)})' title="تعديل">✏️</button>
+                    <button onclick='openComposer(${JSON.stringify(n).replace(/'/g, "\\'")})' title="تعديل">✏️</button>
                     <button onclick="deleteNote('${n.id}')" title="حذف" style="background:rgba(200,0,0,0.3)">🗑️</button>
                 </div>
             </div>
@@ -301,7 +304,7 @@ function copyText(text) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* النغمات المخصصة من الجهاز وحفظها في IndexedDB */
+/* 3. الإعدادات والتنبيهات */
 /* -------------------------------------------------------------------------- */
 function openSettings() { document.getElementById('settingsModal').classList.add('show'); }
 
@@ -315,7 +318,7 @@ document.getElementById('audioUpload').addEventListener('change', function(e) {
         tx.objectStore('settings').put({ key: 'customRingtone', data: base64Audio });
         tx.oncomplete = () => toast('✅ تم حفظ النغمة المخصصة بنجاح!');
     };
-    reader.readAsDataURL(file); // تحويل الملف الصوتي لنص لحفظه محلياً
+    reader.readAsDataURL(file);
 });
 
 function testCustomAudio() { playAlarm(); }
@@ -325,27 +328,24 @@ function playAlarm() {
     const req = tx.objectStore('settings').get('customRingtone');
     req.onsuccess = () => {
         if (req.result && req.result.data) {
-            // تشغيل النغمة المحفوظة
             const audio = new Audio(req.result.data);
             audio.play().catch(e => toast('يجب التفاعل مع الشاشة لتشغيل الصوت'));
         } else {
-            // تشغيل نغمة افتراضية إذا لم يقم برفع نغمة
             playFallbackBeep();
         }
     };
 }
 
 function playFallbackBeep() {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = ctx.createOscillator();
-    o.type = 'square'; o.frequency.value = 880;
-    o.connect(ctx.destination);
-    o.start(); o.stop(ctx.currentTime + 0.5);
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator();
+        o.type = 'square'; o.frequency.value = 880;
+        o.connect(ctx.destination);
+        o.start(); o.stop(ctx.currentTime + 0.5);
+    } catch(e) {}
 }
 
-/* -------------------------------------------------------------------------- */
-/* نظام التنبيهات (والتطبيق مفتوح + والتطبيق مغلق عبر Notification Trigger) */
-/* -------------------------------------------------------------------------- */
 async function requestNotificationPermission() {
     if ('Notification' in window) {
         const perm = await Notification.requestPermission();
@@ -354,7 +354,6 @@ async function requestNotificationPermission() {
     }
 }
 
-// 1. التنبيه العادي: يفحص الوقت كل 10 ثوانٍ (يعمل والتطبيق مفتوح)
 function startReminderChecker() {
     setInterval(() => {
         const now = new Date().getTime();
@@ -368,7 +367,7 @@ function startReminderChecker() {
                     if (now >= remTime) {
                         playAlarm();
                         if(Notification.permission === 'granted') {
-                            new Notification('⏰ تذكير بملاحظتك', { body: note.text });
+                            try{ new Notification('⏰ تذكير بملاحظتك', { body: note.text }); }catch(err){}
                         }
                         note.reminded = true;
                         store.put(note);
@@ -380,7 +379,6 @@ function startReminderChecker() {
     }, 10000);
 }
 
-// 2. التنبيه المتقدم PWA: جدولة الإشعار ليظهر حتى لو تم إغلاق التطبيق (للأندرويد)
 async function scheduleBackgroundNotification(note) {
     if (!note.reminderAt || Notification.permission !== 'granted') return;
     const remTime = new Date(note.reminderAt).getTime();
@@ -388,7 +386,6 @@ async function scheduleBackgroundNotification(note) {
 
     if ('serviceWorker' in navigator) {
         const reg = await navigator.serviceWorker.ready;
-        // تقنية Notification Triggers الحديثة (تضمن ظهور الإشعار بدون سيرفر)
         if ('showTrigger' in Notification.prototype) {
             reg.showNotification('⏰ تذكير (ملاحظاتي)', {
                 body: note.text,
@@ -396,61 +393,6 @@ async function scheduleBackgroundNotification(note) {
                 tag: 'rem-' + note.id
             }).catch(e => console.log('Trigger failed', e));
         }
-    }
-}
-
-/* -------------------------------------------------------------------------- */
-/* تحويل الصوت إلى نص (العربية) - معالجة الأخطاء الذكية */
-/* -------------------------------------------------------------------------- */
-let recognition = null, recActive = false, liveTranscript = '';
-
-function toggleVoiceNote() {
-    if(recActive) { stopVoiceNote(); return; }
-    
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(!SR) return alert('عذراً، متصفحك لا يدعم التعرف على الصوت. استخدم جوجل كروم.');
-    if(window.location.protocol === 'file:') return alert('عذراً، الميكروفون لا يعمل عند فتح الملف محلياً، يجب رفعه على استضافة.');
-
-    liveTranscript = '';
-    recActive = true;
-    document.getElementById('voiceModal').classList.add('show');
-    document.getElementById('liveText').textContent = 'تحدث الآن...';
-    
-    recognition = new SR();
-    recognition.lang = 'ar-SA';
-    recognition.continuous = false; // نتجنب الانهيار في الجوال بتشغيله كدفعات
-    recognition.interimResults = true;
-
-    recognition.onresult = (e) => {
-        let interim = '', final = '';
-        for(let i = e.resultIndex; i < e.results.length; i++){
-            if(e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
-            else interim += e.results[i][0].transcript;
-        }
-        if(final) liveTranscript += final;
-        document.getElementById('liveText').textContent = liveTranscript + interim;
-    };
-
-    recognition.onerror = (e) => {
-        if(e.error === 'network') document.getElementById('liveText').textContent = '⚠️ تحويل الصوت للنص تحديداً يتطلب إنترنت / VPN (بسبب حجب خدمات جوجل).';
-        else document.getElementById('liveText').textContent = 'حدث خطأ: ' + e.error;
-    };
-
-    recognition.onend = () => {
-        if(recActive) { try{ recognition.start(); }catch(e){} }
-    };
-
-    try{ recognition.start(); }catch(e){}
-}
-
-function stopVoiceNote() {
-    recActive = false;
-    if(recognition) { try{ recognition.abort(); }catch(e){} }
-    document.getElementById('voiceModal').classList.remove('show');
-    
-    if(liveTranscript.trim()) {
-        document.getElementById('noteText').value = liveTranscript.trim();
-        openComposer(); // فتح المحرر ليراجعها ويختار الألوان ويحفظها
     }
 }
 
@@ -462,12 +404,91 @@ function speakText(txt) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* تسجيل Service Worker المدمج ليجعل التطبيق يعمل Offline بالكامل */
+/* 4. محرك الصوت المعدّل جذرياً والمقاوم لأخطاء PWA والأندرويد */
+/* -------------------------------------------------------------------------- */
+let recognition = null;
+let recActive = false;
+let finalSpeechText = ''; // لتخزين النص الموثوق وعدم مسحه
+
+function toggleVoiceNote() {
+    if(recActive) { stopVoiceNote(); return; }
+    
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!SR) return alert('متصفحك لا يدعم هذه الميزة. يرجى استخدام متصفح كروم.');
+
+    // تصفير المتغيرات للبدء بنظافة تامة
+    finalSpeechText = '';
+    recActive = true;
+    
+    document.getElementById('voiceModal').classList.add('show');
+    document.getElementById('liveText').textContent = 'تحدث الآن...';
+    
+    // بناء كائن جديد في كل ضغطة يمنع تجميد الجوال للميكروفون القديم
+    recognition = new SR();
+    recognition.lang = 'ar-SA';
+    recognition.continuous = false; // نتركه false لكي لا يحظره الجوال بقوة
+    recognition.interimResults = true;
+
+    recognition.onresult = (e) => {
+        let interim = '';
+        let currentFinal = '';
+        for(let i = e.resultIndex; i < e.results.length; i++){
+            if(e.results[i].isFinal) currentFinal += e.results[i][0].transcript + ' ';
+            else interim += e.results[i][0].transcript;
+        }
+        
+        if(currentFinal) finalSpeechText += currentFinal;
+        document.getElementById('liveText').textContent = finalSpeechText + interim;
+    };
+
+    recognition.onerror = (e) => {
+        if(e.error === 'network') document.getElementById('liveText').textContent = '⚠️ تأكد من اتصال الإنترنت.';
+        if(e.error === 'not-allowed') document.getElementById('liveText').textContent = '⚠️ يرجى إعطاء صلاحية الميكروفون.';
+    };
+
+    recognition.onend = () => {
+        // إذا سكت المستخدم قليلاً وتوقف الميكروفون، نعيد تشغيله برفق بعد 300 ملي ثانية 
+        // التأخير البسيط يمنع نظام الأندرويد من اعتبار التطبيق خبيثاً ويسمح بتشغيله مجدداً
+        if(recActive) {
+            setTimeout(() => {
+                if(recActive && recognition) {
+                    try { recognition.start(); } catch(err) {}
+                }
+            }, 300); 
+        }
+    };
+
+    try { recognition.start(); } catch(e) {}
+}
+
+function stopVoiceNote() {
+    recActive = false; // هذا يوقف دائرة onend نهائياً
+    if(recognition) {
+        try { recognition.stop(); } catch(e) {}
+        recognition = null; // تفريغ الذاكرة
+    }
+    
+    document.getElementById('voiceModal').classList.remove('show');
+    
+    // استخراج النص وتجاهل رسائل النظام
+    let extractedText = document.getElementById('liveText').textContent;
+    extractedText = extractedText.replace('تحدث الآن...', '').replace('⚠️ تأكد من اتصال الإنترنت.', '').trim();
+    
+    if(extractedText) {
+        // نضع النص في حقل المحرر ونفتحه للمستخدم ليختار اللون ويحفظ
+        document.getElementById('noteText').value = extractedText;
+        openComposer(); 
+    } else {
+        toast('لم يتم التقاط أي نص');
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 5. Service Worker للتطبيق (PWA Offline) */
 /* -------------------------------------------------------------------------- */
 if ('serviceWorker' in navigator) {
-    // الكود الآتي يقوم بعمل Service Worker داخلي يحفظ الصفحة للعمل بدون إنترنت
     const swCode = `
-        const CACHE = 'notes-offline-v1';
+        const CACHE = 'notes-offline-v2';
         self.addEventListener('install', e => {
             self.skipWaiting();
             e.waitUntil(caches.open(CACHE).then(c => c.addAll([location.href])));
@@ -478,9 +499,7 @@ if ('serviceWorker' in navigator) {
     `;
     const blob = new Blob([swCode], { type: 'application/javascript' });
     const swUrl = URL.createObjectURL(blob);
-    navigator.serviceWorker.register(swUrl).then(() => {
-        console.log('✅ تطبيقك الآن جاهز للعمل بدون إنترنت (Offline)');
-    }).catch(e => console.log('SW Reg failed:', e));
+    navigator.serviceWorker.register(swUrl).catch(()=>{});
 }
 </script>
 </body>
