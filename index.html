@@ -132,7 +132,16 @@ button,input,textarea,select{font:inherit; color:inherit}
 .full-btn{width:100%;border:0;padding:13px;border-radius:14px;font-weight:800;cursor:pointer;margin-top:6px}
 
 .voice-box{text-align:center}
-#wave{width:100%;height:70px;border-radius:14px;background:#1a0d13;border:1px solid var(--line);margin-bottom:10px}
+/* تأثير الاستماع البصري الجديد للابتعاد عن تضارب الميكروفون */
+.listening-waves { display:flex; justify-content:center; align-items:center; gap:6px; height:70px; margin-bottom:10px; background:#1a0d13; border-radius:14px; border:1px solid var(--line); }
+.listening-waves span { width:8px; height:12px; border-radius:4px; animation:wave-anim 1.2s ease-in-out infinite; }
+.listening-waves span:nth-child(1) { background:#ff477e; animation-delay:0.0s; }
+.listening-waves span:nth-child(2) { background:#ffb703; animation-delay:0.1s; }
+.listening-waves span:nth-child(3) { background:#06d6a0; animation-delay:0.2s; }
+.listening-waves span:nth-child(4) { background:#9b5de5; animation-delay:0.3s; }
+.listening-waves span:nth-child(5) { background:#00b4d8; animation-delay:0.4s; }
+@keyframes wave-anim { 0%, 100% { height:12px; } 50% { height:45px; } }
+
 .live-text{min-height:44px;font-weight:700;color:var(--ink-dim);font-size:13.5px}
 .rec-timer{font-size:22px;font-weight:900;font-variant-numeric:tabular-nums;margin:6px 0;color:#ff477e}
 
@@ -202,7 +211,9 @@ button,input,textarea,select{font:inherit; color:inherit}
 <div class="modal" id="voiceModal">
   <div class="box voice-box">
     <h2>🎙️ يستمع الآن...</h2>
-    <canvas id="wave" width="320" height="70"></canvas>
+    <div class="listening-waves">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
     <div class="rec-timer" id="recTimer">00:00</div>
     <p class="live-text" id="liveText">تحدث بوضوح...</p>
     <div class="row">
@@ -257,15 +268,13 @@ button,input,textarea,select{font:inherit; color:inherit}
       <option value="ar-JO">العربية (الأردن)</option>
       <option value="ar-MA">العربية (المغرب)</option>
     </select>
-    <p class="help">لا توجد لهجة يمنية ضمن خيارات جوجل للتعرف الصوتي، لذلك اخترنا السعودية كأقرب خيار للفصحى. جرّب لهجة أخرى إن لم تُعطِك دقة جيدة. تحويل الصوت لنص يحتاج اتصالاً بالإنترنت دائماً — هذه خدمة جوجل السحابية ولا بديل محلي مجاني لها داخل المتصفح.</p>
+    <p class="help">تأكد من اختيار لهجة قريبة لك. تحويل الصوت لنص يتطلب اتصالاً بالإنترنت لضمان الدقة العالية.</p>
 
     <label>نغمة التذكير</label>
     <div class="color-row" id="toneRow"></div>
-    <p class="help">هذه النغمة تُسمع عندما يكون التطبيق مفتوحاً أمامك. عند إغلاق التطبيق، يستخدم النظام نغمة الإشعارات الافتراضية لجهازك — لا يسمح أي متصفح لأي تطبيق ويب باختيار نغمة مخصّصة لإشعارات الخلفية.</p>
 
     <label>الإشعارات في الخلفية</label>
     <button class="secondary full-btn" onclick="enableBackgroundReminders()">🔔 تفعيل الإشعارات والتحقق الدوري</button>
-    <p class="help">لا يمكن لأي تطبيق PWA ضمان ظهور التذكير في وقته تماماً عند إغلاق التطبيق كليّاً — هذا قيد من المتصفح نفسه وليس خطأ بالتطبيق. بعد الضغط هنا، سيحاول التطبيق التحقق من التذكيرات في الخلفية كلما سمح النظام بذلك (على أندرويد فقط، وبفواصل يحددها المتصفح، غالباً ليست دقيقة للثانية). لأفضل نتيجة: أبقِ التطبيق مفتوحاً في الخلفية ولا تُغلقه بالسحب الكامل.</p>
 
     <button class="secondary full-btn" onclick="forceUpdateApp()">🔄 تحديث التطبيق وتفريغ الكاش</button>
 
@@ -300,7 +309,7 @@ function buildColorRow(container,selected,onPick){
   });
 }
 
-/* ---------- الإعدادات (لهجة الصوت + نغمة التذكير) ---------- */
+/* ---------- الإعدادات ---------- */
 const SETTINGS_KEY='notesSettingsV1';
 let settings=Object.assign({sttLang:'ar-SA',tone:'chime'}, JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}'));
 function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
@@ -481,11 +490,6 @@ function checkReminders(){
 }
 setInterval(checkReminders,15000);
 
-/* ---------- التخزين المشترك مع Service Worker عبر IndexedDB ----------
-   localStorage غير متاح داخل الـ Service Worker، لذلك نُخزّن نسخة خفيفة من
-   بيانات التذكيرات فقط (id/نص/موعد/تم) في IndexedDB، ليتمكن العامل من
-   التحقق منها وإطلاق إشعار حتى لو كان التطبيق مغلقاً. كل بياناتك تبقى
-   محلية بالكامل على جهازك، لا شيء يُرسل لأي خادم. */
 const RDB_NAME='notesRemindersDB', RDB_STORE='reminders';
 function openRDB(){
   return new Promise((resolve,reject)=>{
@@ -520,8 +524,6 @@ async function syncRemindedFromIDB(){
     if(changed) save();
   }catch(e){}
 }
-
-/* ---------- جدولة إشعار دقيقة عبر TimestampTrigger (مدعومة جزئياً وتجريبياً في كروم أندرويد فقط) ---------- */
 async function scheduleTriggerNotification(note){
   if(!('serviceWorker' in navigator) || typeof TimestampTrigger==='undefined') return false;
   if(!note.reminderAt || Notification.permission!=='granted') return false;
@@ -550,7 +552,6 @@ async function resyncNoteTrigger(note){
   await cancelTriggerNotification(note.id);
   if(note.reminderAt) await scheduleTriggerNotification(note);
 }
-
 async function enableBackgroundReminders(){
   if(!('Notification' in window)) return toast('المتصفح لا يدعم الإشعارات');
   const perm=await Notification.requestPermission();
@@ -569,8 +570,6 @@ async function enableBackgroundReminders(){
             toast('⚠️ إذن المزامنة الدورية غير مُتاح، سيُعتمد على فتح التطبيق فقط');
           }
         }catch(e){ toast('⚠️ المزامنة الدورية غير مدعومة في هذا المتصفح'); }
-      }else{
-        toast('⚠️ متاحة فقط في أندرويد كروم بعد تثبيت التطبيق كـ PWA');
       }
     }catch(e){}
   }
@@ -617,112 +616,91 @@ function attachCardEffects(){
   });
 }
 
-/* ---------- الملاحظة الصوتية: تسجيل + تفريغ نصي ----------
-   ملاحظة تقنية مهمة: كنّا سابقاً نفتح ميكروفوناً عبر MediaRecorder بالتوازي
-   مع ميكروفون آخر داخلي يفتحه SpeechRecognition — على كثير من هواتف
-   أندرويد لا يُسمح بفتح مصدرين للميكروفون في نفس اللحظة، فيفشل التعرف
-   الصوتي بصمت. بما أن الصوت الفعلي لم يكن يُحفظ أصلاً، تم الاستغناء عن
-   MediaRecorder والاكتفاء بمصدر واحد للـ getUserMedia (للموجة المرئية فقط)
-   وترك SpeechRecognition يدير ميكروفونه الخاص بحرية. */
-let mediaStream=null, recognition=null, recognitionShouldRun=false;
+/* ---------- الملاحظة الصوتية: تسجيل + تفريغ نصي بدون تضارب الميكروفون ---------- */
+let recognition=null, recognitionShouldRun=false;
 let recStartTime=0, recTimerHandle=null, liveTranscript='';
-let audioCtx=null, analyser=null, waveHandle=null;
 
-async function toggleVoiceNote(){
+function toggleVoiceNote(){
   if(recognitionShouldRun){ stopVoiceNote(); return; }
-  await startVoiceNote();
+  startVoiceNote();
 }
-async function startVoiceNote(){
-  try{
-    mediaStream=await navigator.mediaDevices.getUserMedia({audio:true});
-  }catch(e){ toast('يلزم إذن الميكروفون للتسجيل. تأكد من فتح التطبيق عبر رابط آمن HTTPS.'); return; }
+
+function startVoiceNote(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    toast('ميزة تحويل الصوت لنص غير مدعومة في متصفحك الحالي.');
+    return;
+  }
+
   liveTranscript='';
   recognitionShouldRun=true;
   recStartTime=Date.now();
-  $('micBtn').classList.add('rec'); $('micBtn').innerHTML='⏹️ إيقاف التسجيل<small>اضغط للإنهاء وتحويل الصوت لنص</small>';
-  $('voiceModal').classList.add('show'); $('liveText').textContent='تحدث بوضوح...'; $('recTimer').textContent='00:00';
+  
+  $('micBtn').classList.add('rec'); 
+  $('micBtn').innerHTML='⏹️ إيقاف التسجيل<small>اضغط للإنهاء وتحويل الصوت لنص</small>';
+  $('voiceModal').classList.add('show'); 
+  $('liveText').textContent='تحدث بوضوح (بالعربية)...'; 
+  $('recTimer').textContent='00:00';
+  
   recTimerHandle=setInterval(()=>{
     const s=Math.floor((Date.now()-recStartTime)/1000);
     $('recTimer').textContent=pad(Math.floor(s/60))+':'+pad(s%60);
   },300);
-  setupWaveform(mediaStream);
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(SR){
-    recognition=new SR();
-    recognition.lang=settings.sttLang||'ar-SA';
-    recognition.continuous=true; recognition.interimResults=true;
-    recognition.onresult=e=>{
-      let interim='';
-      for(let i=e.resultIndex;i<e.results.length;i++){
-        if(e.results[i].isFinal) liveTranscript+=e.results[i][0].transcript+' ';
-        else interim+=e.results[i][0].transcript;
-      }
-      $('liveText').textContent=(liveTranscript+interim)||'...';
-    };
-    recognition.onerror=e=>{
-      const msgs={
-        'not-allowed':'تم رفض إذن الميكروفون. فعّله من إعدادات المتصفح.',
-        'service-not-allowed':'تم رفض إذن الميكروفون. فعّله من إعدادات المتصفح.',
-        'no-speech':'لم يتم رصد صوت، حاول التحدث بوضوح أكثر.',
-        'audio-capture':'تعذّر الوصول للميكروفون — تأكد أنه غير مستخدم من تطبيق آخر.',
-        'network':'تحويل الصوت لنص يحتاج اتصالاً فعلياً بالإنترنت (خدمة جوجل الصوتية).',
-        'language-not-supported':'اللهجة المختارة غير مدعومة، جرّب لهجة أخرى من ⚙️ الإعدادات.'
-      };
-      const m=msgs[e.error];
-      if(m) $('liveText').textContent=m;
-    };
-    recognition.onend=()=>{
-      if(recognitionShouldRun){ try{ recognition.start(); }catch(e){} }
-    };
-    try{ recognition.start(); }catch(e){}
-  }else{
-    $('liveText').textContent='ميزة تحويل الصوت لنص غير مدعومة في متصفحك الحالي.';
-  }
-}
-function setupWaveform(stream){
-  audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-  const src=audioCtx.createMediaStreamSource(stream);
-  analyser=audioCtx.createAnalyser(); analyser.fftSize=256;
-  src.connect(analyser);
-  const canvas=$('wave'), ctx=canvas.getContext('2d');
-  const data=new Uint8Array(analyser.frequencyBinCount);
-  function draw(){
-    waveHandle=requestAnimationFrame(draw);
-    analyser.getByteFrequencyData(data);
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    const barW=canvas.width/data.length;
-    for(let i=0;i<data.length;i++){
-      const h=(data[i]/255)*canvas.height;
-      ctx.fillStyle=ACCENTS[i%ACCENTS.length];
-      ctx.fillRect(i*barW, canvas.height-h, barW-1, h);
+  
+  recognition = new SR();
+  recognition.lang = settings.sttLang || 'ar-SA';
+  recognition.continuous = true; 
+  recognition.interimResults = true;
+  
+  recognition.onresult = e => {
+    let interim='';
+    for(let i=e.resultIndex; i<e.results.length; i++){
+      if(e.results[i].isFinal) liveTranscript += e.results[i][0].transcript + ' ';
+      else interim += e.results[i][0].transcript;
     }
-  }
-  draw();
+    $('liveText').textContent = (liveTranscript+interim) || '...';
+  };
+  
+  recognition.onerror = e => {
+    const msgs={
+      'not-allowed':'تم رفض إذن الميكروفون. يرجى تفعيله من إعدادات المتصفح.',
+      'audio-capture':'تأكد أن الميكروفون غير مستخدم من تطبيق آخر.',
+      'network':'هذه الميزة تتطلب اتصالاً بالإنترنت.',
+      'no-speech':'لم أتمكن من سماعك بوضوح، استمر بالتحدث...'
+    };
+    if(msgs[e.error]) $('liveText').textContent = msgs[e.error];
+  };
+  
+  recognition.onend = () => {
+    if(recognitionShouldRun){ 
+      try{ recognition.start(); }catch(e){} 
+    }
+  };
+  
+  try{ recognition.start(); }catch(e){}
 }
-function teardownWaveform(){
-  if(waveHandle) cancelAnimationFrame(waveHandle);
-  if(audioCtx){ audioCtx.close().catch(()=>{}); audioCtx=null; }
-}
-function stopMic(){
-  if(mediaStream){ mediaStream.getTracks().forEach(t=>t.stop()); mediaStream=null; }
-  if(recognition){ try{recognition.stop();}catch(e){} }
-  teardownWaveform();
-}
+
 function stopVoiceNote(){
-  recognitionShouldRun=false;
+  recognitionShouldRun = false;
   clearInterval(recTimerHandle);
-  stopMic();
+  if(recognition){ try{ recognition.stop(); }catch(e){} }
+  
   $('voiceModal').classList.remove('show');
-  $('micBtn').classList.remove('rec'); $('micBtn').innerHTML='🎙️ ملاحظة صوتية جديدة<small>اضغط للبدء، واضغط مجدداً للإيقاف</small>';
+  $('micBtn').classList.remove('rec'); 
+  $('micBtn').innerHTML='🎙️ ملاحظة صوتية جديدة<small>اضغط للبدء، واضغط مجدداً للإيقاف</small>';
   openReview();
 }
+
 function cancelVoiceNote(){
-  recognitionShouldRun=false;
+  recognitionShouldRun = false;
   clearInterval(recTimerHandle);
-  stopMic();
+  if(recognition){ try{ recognition.stop(); }catch(e){} }
+  
   $('voiceModal').classList.remove('show');
-  $('micBtn').classList.remove('rec'); $('micBtn').innerHTML='🎙️ ملاحظة صوتية جديدة<small>اضغط للبدء، واضغط مجدداً للإيقاف</small>';
+  $('micBtn').classList.remove('rec'); 
+  $('micBtn').innerHTML='🎙️ ملاحظة صوتية جديدة<small>اضغط للبدء، واضغط مجدداً للإيقاف</small>';
 }
+
 let reviewColor=null;
 function openReview(){
   $('reviewText').value=liveTranscript.trim();
@@ -733,10 +711,7 @@ function openReview(){
 }
 function saveReview(){
   const text=$('reviewText').value.trim();
-  if(!text){
-    toast('لا يوجد نص لحفظه!');
-    return;
-  }
+  if(!text){ toast('لا يوجد نص لحفظه!'); return; }
   const remVal=$('reviewReminder').value;
   const n={
     id:uid(), text:text, color:reviewColor, createdAt:new Date().toISOString(),
@@ -793,7 +768,7 @@ window.addEventListener('online',updateOnlineStatus);
 window.addEventListener('offline',updateOnlineStatus);
 updateOnlineStatus();
 
-/* ---------- تسجيل الـ Service Worker + محاولة تفعيل المزامنة الدورية تلقائياً ---------- */
+/* ---------- تسجيل الـ Service Worker ---------- */
 if('serviceWorker' in navigator){
   window.addEventListener('load', async ()=>{
     try{
